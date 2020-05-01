@@ -14,7 +14,7 @@ namespace StuffDatabase
 {
     public partial class CTRL_Components : UserControl
     {
-        readonly SaveableBindingList<Component> componentDB = new SaveableBindingList<Component>(@"Resources\components.json");
+        readonly SaveableBindingList<Component> componentDB = new SaveableBindingList<Component>(@"Resources\Components\Database.json");
 
 
         public CTRL_Components()
@@ -24,14 +24,15 @@ namespace StuffDatabase
 
         private void CTRL_Components_Load(object sender, EventArgs e)
         {
-            if(Directory.Exists(@"Resources\Templates\Components"))
-                foreach (string file in Directory.GetFiles(@"Resources\Templates\Components", "*.label"))
+            if(Directory.Exists(@"Resources\Components\Templates"))
+                foreach (string file in Directory.GetFiles(@"Resources\Components\Templates", "*.label"))
                     comboBox1.Items.Add(new Template<Component>(file));
 
 
             if (comboBox1.Items.Count > 0)
                 comboBox1.SelectedIndex = 0;
 
+            componentDB.SortBy(a => a.Name);
             listBox1.DataSource = componentDB;
         }
 
@@ -76,6 +77,8 @@ namespace StuffDatabase
             Component selectedComponent = (Component)listBox1.SelectedItem;
             if (selectedComponent != null)
                 SaveToComponent(selectedComponent);
+            componentDB.Save();
+            OpenFromComponent(selectedComponent);
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -93,6 +96,11 @@ namespace StuffDatabase
                 componentDB.Remove(selectedComponent);
         }
 
-        
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Component selectedComponent = (Component)listBox1.SelectedItem;
+            if (selectedComponent != null)
+                OpenFromComponent(selectedComponent);
+        }
     }
 }

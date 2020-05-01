@@ -49,12 +49,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Chemical.cs" />
     <Compile Include="Component.cs" />
-    <Compile Include="CTRL_Chemicals.cs">
+    <Compile Include="CTRL_Chemical.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="CTRL_Chemicals.Designer.cs">
-      <DependentUpon>CTRL_Chemicals.cs</DependentUpon>
+    <Compile Include="CTRL_Chemical.Designer.cs">
+      <DependentUpon>CTRL_Chemical.cs</DependentUpon>
     </Compile>
     <Compile Include="CTRL_Components.cs">
       <SubType>UserControl</SubType>
@@ -72,8 +73,8 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Template.cs" />
-    <EmbeddedResource Include="CTRL_Chemicals.resx">
-      <DependentUpon>CTRL_Chemicals.cs</DependentUpon>
+    <EmbeddedResource Include="CTRL_Chemical.resx">
+      <DependentUpon>CTRL_Chemical.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CTRL_Components.resx">
       <DependentUpon>CTRL_Components.cs</DependentUpon>

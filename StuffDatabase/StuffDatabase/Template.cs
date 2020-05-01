@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Reflection;
 
 namespace StuffDatabase
@@ -27,19 +29,32 @@ namespace StuffDatabase
 
                 PropertyInfo propInfo = typeof(T).GetProperty(name);
 
-                object prop = propInfo.GetValue(chem);
-
-                switch (prop)
+                if (propInfo != null)
                 {
-                    case string v:
-                        label.SetObjectText(name, v);
-                        break;
+                    object prop = propInfo.GetValue(chem);
+
+                    switch (prop)
+                    {
+                        case string v:
+                            label.SetObjectText(name, v);
+                            break;
+                        case Image i:
+                            label.SetImagePngData("GHSimg", ImgToStream(i, ImageFormat.Png));
+                            break;
+                    }
                 }
 
             }
             return label;
         }
 
+        Stream ImgToStream(Image image, ImageFormat format)
+        {
+            var stream = new System.IO.MemoryStream();
+            image.Save(stream, format);
+            stream.Position = 0;
+            return stream;
+        }
 
 
         public override string ToString()
