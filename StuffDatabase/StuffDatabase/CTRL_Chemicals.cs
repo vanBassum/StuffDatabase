@@ -9,13 +9,12 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using STDLib.Saveable;
 using System.IO;
-using STDLib.Misc;
 
 namespace StuffDatabase
 {
     public partial class CTRL_Chemicals : UserControl
     {
-        readonly SaveableBindingList<Chemical> ChemicalDB = new SaveableBindingList<Chemical>(@"Resources\Chemicals.json");
+        readonly SaveableBindingList<Component> componentDB = new SaveableBindingList<Component>(@"Resources\components.json");
 
         public CTRL_Chemicals()
         {
@@ -24,73 +23,73 @@ namespace StuffDatabase
 
         private void CTRL_Chemicals_Load(object sender, EventArgs e)
         {
-            if (Directory.Exists(@"Resources\Templates\Chemicals"))
-                foreach (string file in Directory.GetFiles(@"Resources\Templates\Chemicals", "*.label"))
-                    comboBox1.Items.Add(new Template<Chemical>(file));
+            if (Directory.Exists(@"Resources\Templates\Components"))
+                foreach (string file in Directory.GetFiles(@"Resources\Templates\Components", "*.label"))
+                    comboBox1.Items.Add(new Template<Component>(file));
 
 
             if (comboBox1.Items.Count > 0)
                 comboBox1.SelectedIndex = 0;
 
-            listBox1.DataSource = ChemicalDB;
+            listBox1.DataSource = componentDB;
         }
 
 
         private void button1_Click(object sender, EventArgs e)
         {
-            ChemicalDB.AddNew();
+            componentDB.AddNew();
         }
 
         bool canLoad = true;
-        void OpenFromChemical(Chemical Chemical)
+        void OpenFromComponent(Component component)
         {
             if (canLoad)
             {
-                Template<Chemical> template = (Template<Chemical>)comboBox1.SelectedItem;
+                Template<Component> template = (Template<Component>)comboBox1.SelectedItem;
 
-                textBox1.Text = Chemical.Name;
-                richTextBox1.Text = Chemical.Description;
+                textBox1.Text = component.Name;
+                richTextBox1.Text = component.Description;
 
-                pictureBox1.Image = Dymo.Render(template, Chemical);
+                pictureBox1.Image = Dymo.Render(template, component);
             }
         }
 
-        void SaveToChemical(Chemical Chemical)
+        void SaveToComponent(Component component)
         {
             canLoad = false;
-            Chemical.Name = textBox1.Text;
-            Chemical.Description = richTextBox1.Text;
+            component.Name = textBox1.Text;
+            component.Description = richTextBox1.Text;
             canLoad = true;
         }
 
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Chemical selectedChemical = (Chemical)listBox1.SelectedItem;
-            if (selectedChemical != null)
-                OpenFromChemical(selectedChemical);
+            Component selectedComponent = (Component)listBox1.SelectedItem;
+            if (selectedComponent != null)
+                OpenFromComponent(selectedComponent);
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            Chemical selectedChemical = (Chemical)listBox1.SelectedItem;
-            if (selectedChemical != null)
-                SaveToChemical(selectedChemical);
+            Component selectedComponent = (Component)listBox1.SelectedItem;
+            if (selectedComponent != null)
+                SaveToComponent(selectedComponent);
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            Template<Chemical> template = (Template<Chemical>)comboBox1.SelectedItem;
-            Chemical selectedChemical = (Chemical)listBox1.SelectedItem;
-            if (selectedChemical != null && template != null)
-                Dymo.Print(template, selectedChemical);
+            Template<Component> template = (Template<Component>)comboBox1.SelectedItem;
+            Component selectedComponent = (Component)listBox1.SelectedItem;
+            if (selectedComponent != null && template != null)
+                Dymo.Print(template, selectedComponent);
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
-            Chemical selectedChemical = (Chemical)listBox1.SelectedItem;
-            if (selectedChemical != null)
-                ChemicalDB.Remove(selectedChemical);
+            Component selectedComponent = (Component)listBox1.SelectedItem;
+            if (selectedComponent != null)
+                componentDB.Remove(selectedComponent);
         }
     }
 }

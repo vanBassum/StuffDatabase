@@ -49,7 +49,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Chemical.cs" />
     <Compile Include="Component.cs" />
     <Compile Include="CTRL_Chemicals.cs">
       <SubType>UserControl</SubType>
