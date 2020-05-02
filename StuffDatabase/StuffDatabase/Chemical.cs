@@ -6,7 +6,7 @@ namespace StuffDatabase
 {
     public class Chemical : PropertySensitive
     {
-        public string Name { get { return GetPar("new"); } set { SetPar(value); } }
+        public string Name { get { return GetPar(" new"); } set { SetPar(value); } }
         public string Formula { get { return GetPar(""); } set { SetPar(value); } }
         public string Description { get { return GetPar(""); } set { SetPar(value); } }
         public List<GHS> GHSitems { get { return GetPar(new List<GHS>()); } set { SetPar(value); } }
