@@ -18,7 +18,7 @@ namespace StuffDatabase
     public partial class CTRL_Components : UserControl
     {
         readonly SaveableBindingList<Component> componentDB = new SaveableBindingList<Component>(@"Resources\Components\Database.json");
-
+        Component selectedComponent = null;
 
         public CTRL_Components()
         {
@@ -36,7 +36,9 @@ namespace StuffDatabase
                 comboBox1.SelectedIndex = 0;
 
             componentDB.SortBy(a => a.Name);
-            listBox1.DataSource = componentDB;
+            componentDB.ListChanged += ComponentDB_ListChanged;
+            componentDB.SortBy(a => a.Function);
+            //listBox1.DataSource = componentDB;
 
             panel2.AllowDrop = true;
             panel2.DragDrop += Datasheet_DragDrop;
@@ -46,25 +48,47 @@ namespace StuffDatabase
             this.DragDrop += Datasheet_DragDrop;
             this.DragEnter += Datasheet_DragEnter;*/
 
-            listBox1.KeyDown += KeyDown;
+            //listBox1.KeyDown += KeyDown;
+
+            
         }
 
-        private void KeyDown(object sender, KeyEventArgs e)
+        private void ComponentDB_ListChanged(object sender, ListChangedEventArgs e)
         {
-            if(e.Modifiers == Keys.Control || e.Modifiers == Keys.RControlKey)
+            SaveableBindingList<Component> db = sender as SaveableBindingList<Component>;
+
+            bool doCompleteReset = true;
+            switch (e.ListChangedType)
             {
-                if(e.KeyCode == Keys.P)
+                case ListChangedType.ItemAdded:
+                    AddNode(db[e.NewIndex]);
+                    doCompleteReset = false;
+                    break;
+            }
+
+            if (doCompleteReset)
+            {
+                treeView1.Nodes.Clear();
+                foreach (Component component in componentDB)
                 {
-                    Template<Component> template = (Template<Component>)comboBox1.SelectedItem;
-                    Component selectedComponent = (Component)listBox1.SelectedItem;
-                    if (selectedComponent != null && template != null)
-                        Dymo.Print(template, selectedComponent);
+                    AddNode(component);
                 }
             }
         }
 
+        void AddNode(Component component)
+        {
+            if (treeView1.Nodes.ContainsKey(component.Function))
+                treeView1.Nodes[component.Function].Nodes.Add(component.Name, component.ToString()).Tag = component;
+            else
+                treeView1.Nodes.Add(component.Function, component.Function).Nodes.Add(component.Name, component.ToString()).Tag = component;
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
+            Component newComponent = new Component();
+            if (selectedComponent != null)
+                newComponent.Function = selectedComponent.Function;
             componentDB.AddNew();
         }
 
@@ -92,16 +116,8 @@ namespace StuffDatabase
         }
 
 
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            Component selectedComponent = (Component)listBox1.SelectedItem;
-            if (selectedComponent != null)
-                OpenFromComponent(selectedComponent);
-        }
-
         private void button3_Click(object sender, EventArgs e)
         {
-            Component selectedComponent = (Component)listBox1.SelectedItem;
             if (selectedComponent != null)
                 SaveToComponent(selectedComponent);
             componentDB.Save();
@@ -111,30 +127,33 @@ namespace StuffDatabase
         private void button2_Click(object sender, EventArgs e)
         {
             Template<Component> template = (Template<Component>)comboBox1.SelectedItem;
-            Component selectedComponent = (Component)listBox1.SelectedItem;
             if (selectedComponent != null && template != null)
                 Dymo.Print(template, selectedComponent);
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
-            Component selectedComponent = (Component)listBox1.SelectedItem;
-            if (selectedComponent != null)
-                componentDB.Remove(selectedComponent);
+            TreeNode node = treeView1.SelectedNode;
+
+            if (node != null)
+            {
+                if (node.Tag != null)
+                {
+                    selectedComponent = (Component)node.Tag;
+                    componentDB.Remove(selectedComponent);
+                }
+            }
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Component selectedComponent = (Component)listBox1.SelectedItem;
             if (selectedComponent != null)
                 OpenFromComponent(selectedComponent);
         }
 
         private void Datasheet_DragDrop(object sender, DragEventArgs e)
         {
-            
             canLoad = false;
-            Component selectedComponent = (Component)listBox1.SelectedItem;
             if (selectedComponent != null)
             {
                 SaveToComponent(selectedComponent);
@@ -158,7 +177,6 @@ namespace StuffDatabase
 
         private void panel2_Click(object sender, EventArgs e)
         {
-            Component selectedComponent = (Component)listBox1.SelectedItem;
             if (selectedComponent != null)
             {
                 if (selectedComponent.Datasheet != "")
@@ -167,6 +185,37 @@ namespace StuffDatabase
                         System.Diagnostics.Process.Start(selectedComponent.Datasheet);
                 }
             }
+        }
+
+
+        private void treeView1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            TreeNode node = treeView1.SelectedNode;
+
+            if (node != null)
+            {
+                if(node.Tag != null)
+                {
+                    selectedComponent = (Component)node.Tag;
+                    OpenFromComponent(selectedComponent);
+
+                    AutoCompleteStringCollection sourceName = new AutoCompleteStringCollection();
+
+                    foreach (string name in componentDB.Select(c => c.Function))
+                    {
+                        sourceName.Add(name);
+                    }
+
+                    textBox2.AutoCompleteCustomSource = sourceName;
+                    textBox2.AutoCompleteMode = AutoCompleteMode.Suggest;
+                    textBox2.AutoCompleteSource = AutoCompleteSource.CustomSource;
+                }
+            }
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
