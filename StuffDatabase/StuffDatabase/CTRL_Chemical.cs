@@ -28,11 +28,16 @@ namespace StuffDatabase
                 foreach (string file in Directory.GetFiles(@"Resources\Chemicals\Templates", "*.label"))
                     comboBox1.Items.Add(new Template<Chemical>(file));
 
-            foreach (string ghsFile in Directory.GetFiles(@"Resources\Chemicals\Symbols", "*.png"))
+            try
             {
-                CheckBox cb = new CheckBox() { Text = Path.GetFileNameWithoutExtension(ghsFile), Tag = ghsFile };
-                flowLayoutPanel1.Controls.Add(cb);
+                foreach (string ghsFile in Directory.GetFiles(@"Resources\Chemicals\Symbols", "*.png"))
+                {
+                    CheckBox cb = new CheckBox() { Text = Path.GetFileNameWithoutExtension(ghsFile), Tag = ghsFile };
+                    flowLayoutPanel1.Controls.Add(cb);
+                }
             }
+            catch(Exception ex)
+            { }
 
             if (comboBox1.Items.Count > 0)
                 comboBox1.SelectedIndex = 0;

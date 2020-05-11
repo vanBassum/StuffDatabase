@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.ctrL_Chemical1 = new StuffDatabase.CTRL_Chemical();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.ctrL_Components1 = new StuffDatabase.CTRL_Components();
+            this.ctrL_Chemical1 = new StuffDatabase.CTRL_Chemical();
             this.tabPage2.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -45,17 +45,9 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(569, 446);
+            this.tabPage2.Size = new System.Drawing.Size(719, 446);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Chemicals";
-            // 
-            // ctrL_Chemical1
-            // 
-            this.ctrL_Chemical1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctrL_Chemical1.Location = new System.Drawing.Point(3, 3);
-            this.ctrL_Chemical1.Name = "ctrL_Chemical1";
-            this.ctrL_Chemical1.Size = new System.Drawing.Size(563, 440);
-            this.ctrL_Chemical1.TabIndex = 0;
             // 
             // tabControl1
             // 
@@ -65,7 +57,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(577, 472);
+            this.tabControl1.Size = new System.Drawing.Size(727, 512);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage1
@@ -75,7 +67,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(569, 446);
+            this.tabPage1.Size = new System.Drawing.Size(719, 486);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Components";
             // 
@@ -84,15 +76,23 @@
             this.ctrL_Components1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ctrL_Components1.Location = new System.Drawing.Point(3, 3);
             this.ctrL_Components1.Name = "ctrL_Components1";
-            this.ctrL_Components1.Size = new System.Drawing.Size(563, 440);
+            this.ctrL_Components1.Size = new System.Drawing.Size(713, 480);
             this.ctrL_Components1.TabIndex = 0;
+            // 
+            // ctrL_Chemical1
+            // 
+            this.ctrL_Chemical1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctrL_Chemical1.Location = new System.Drawing.Point(3, 3);
+            this.ctrL_Chemical1.Name = "ctrL_Chemical1";
+            this.ctrL_Chemical1.Size = new System.Drawing.Size(713, 440);
+            this.ctrL_Chemical1.TabIndex = 0;
             // 
             // Form1
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(577, 472);
+            this.ClientSize = new System.Drawing.Size(727, 512);
             this.Controls.Add(this.tabControl1);
             this.Name = "Form1";
             this.Text = "Form1";

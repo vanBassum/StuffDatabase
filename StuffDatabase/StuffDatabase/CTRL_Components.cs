@@ -56,7 +56,6 @@ namespace StuffDatabase
         private void ComponentDB_ListChanged(object sender, ListChangedEventArgs e)
         {
             SaveableBindingList<Component> db = sender as SaveableBindingList<Component>;
-
             bool doCompleteReset = true;
             switch (e.ListChangedType)
             {
@@ -64,7 +63,35 @@ namespace StuffDatabase
                     AddNode(db[e.NewIndex]);
                     doCompleteReset = false;
                     break;
+
+                case ListChangedType.ItemChanged:
+                    //find the node!
+
+                    TreeNode[] tn = GetNodePath(db[e.NewIndex]);
+
+                    if(tn.Length == 2)
+                    {
+                        if (e.PropertyDescriptor.Name == nameof(Component.Name))
+                            tn[1].Text = db[e.NewIndex].ToString();
+
+                        if (e.PropertyDescriptor.Name == nameof(Component.Function))
+                        {
+                            string newFunc = e.PropertyDescriptor.GetValue(db[e.NewIndex]) as string;
+                            if (tn[0].Text != newFunc)
+                            {
+                                tn[0].Nodes.Remove(tn[1]);
+                                AddNode(db[e.NewIndex]);
+
+                                if(tn[0].Nodes.Count == 0)
+                                    treeView1.Nodes.Remove(tn[0]);
+                            }
+                        }
+                    }
+
+                    doCompleteReset = false;
+                    break;
             }
+
 
             if (doCompleteReset)
             {
@@ -74,6 +101,22 @@ namespace StuffDatabase
                     AddNode(component);
                 }
             }
+        }
+
+
+        TreeNode[] GetNodePath(Component component)
+        {
+            foreach (TreeNode tn1 in treeView1.Nodes)
+            {
+                foreach (TreeNode tn2 in tn1.Nodes)
+                {
+                    if (tn2.Tag == component)
+                    {
+                        return new TreeNode[] { tn1, tn2 };
+                    }
+                }
+            }
+            return new TreeNode[] { };
         }
 
         void AddNode(Component component)
@@ -87,9 +130,23 @@ namespace StuffDatabase
         private void button1_Click(object sender, EventArgs e)
         {
             Component newComponent = new Component();
-            if (selectedComponent != null)
-                newComponent.Function = selectedComponent.Function;
-            componentDB.AddNew();
+
+            if(treeView1.SelectedNode != null)
+            {
+                if(treeView1.SelectedNode.Parent == null)
+                {
+                    newComponent.Function = treeView1.SelectedNode.Text;
+                }
+                else
+                {
+                    newComponent.Function = treeView1.SelectedNode.Parent.Text;
+                }
+            }
+
+            componentDB.Add(newComponent);
+            selectedComponent = newComponent;
+            OpenFromComponent(newComponent);
+
         }
 
         bool canLoad = true;
