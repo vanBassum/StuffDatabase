@@ -50,7 +50,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Chemical.cs" />
-    <Compile Include="Component.cs" />
+    <Compile Include="Components\BaseComponent.cs" />
+    <Compile Include="Components\Resistor.cs" />
+    <Compile Include="Components\Transistor.cs" />
     <Compile Include="CTRL_Chemical.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -64,12 +66,14 @@
       <DependentUpon>CTRL_Components.cs</DependentUpon>
     </Compile>
     <Compile Include="Dymo.cs" />
+    <Compile Include="Ext.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="MultiLineTextEditor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Template.cs" />

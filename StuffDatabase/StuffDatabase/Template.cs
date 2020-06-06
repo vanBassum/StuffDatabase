@@ -31,9 +31,12 @@ namespace StuffDatabase
 
                 if (m.Success)
                 {
-                    PropertyInfo propInfo = typeof(T).GetProperty(m.Groups[1].Value);
+                    PropertyInfo propInfo = obj.GetType().GetProperty(m.Groups[1].Value);
                     if (propInfo != null)
-                        label.FillLabelObject(name, propInfo.GetValue(obj));
+                    {
+                        string txt = propInfo.GetValue(obj).ToString();
+                        label.FillLabelObject(name, txt);
+                    }
                 }
 
             }
