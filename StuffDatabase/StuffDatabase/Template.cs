@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using DYMO.Label.Framework;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Reflection;
@@ -6,6 +7,12 @@ using System.Text.RegularExpressions;
 
 namespace StuffDatabase
 {
+    public interface ILabelConvertable
+    {
+        void PopulateLabel(DYMO.Label.Framework.ILabel label);
+    }
+
+
     public class Template<T>
     {
         public string File { get; set; }
@@ -24,24 +31,36 @@ namespace StuffDatabase
         {
             DYMO.Label.Framework.ILabel label = DYMO.Label.Framework.DieCutLabel.Open(File);
 
-            foreach (DYMO.Label.Framework.ILabelObject labelObj in label.Objects)
+            switch (obj)
             {
-                string name = labelObj.Name;
-                Match m = Regex.Match(name, @"([^_ \r\n]+)");
 
-                if (m.Success)
-                {
-                    PropertyInfo propInfo = obj.GetType().GetProperty(m.Groups[1].Value);
-                    if (propInfo != null)
+                case ILabelConvertable v:
+                    v.PopulateLabel(label);
+                    break;
+                default:
+                    foreach (DYMO.Label.Framework.ILabelObject labelObj in label.Objects)
                     {
-                        string txt = propInfo.GetValue(obj).ToString();
-                        label.FillLabelObject(name, txt);
-                    }
-                }
+                        string name = labelObj.Name;
+                        Match m = Regex.Match(name, @"([^_ \r\n]+)");
 
+                        if (m.Success)
+                        {
+                            PropertyInfo propInfo = obj.GetType().GetProperty(m.Groups[1].Value);
+                            if (propInfo != null)
+                            {
+                                string txt = propInfo.GetValue(obj).ToString();
+                                label.FillLabelObject(name, txt);
+                            }
+                        }
+
+                    }
+                    break;
             }
+
             return label;
         }
+
+        /*
 
         public DYMO.Label.Framework.ILabel GetLabel(T[] objs)
         {
@@ -63,7 +82,7 @@ namespace StuffDatabase
             }
             return label;
         }
-
+        */
 
 
 

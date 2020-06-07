@@ -18,6 +18,7 @@ namespace StuffDatabase
     {
         readonly SaveableBindingList<BaseComponent> componentDB = new SaveableBindingList<BaseComponent>(@"Resources\Components\Database.json");
         private Predicate<BaseComponent> Filter { get; set; } = (a) => (true);
+        BaseComponent selectedComponent = null;
         public CTRL_Components()
         {
             InitializeComponent();
@@ -78,26 +79,24 @@ namespace StuffDatabase
 
         bool TryGetSelectedComponent(out BaseComponent comp)
         {
-            if (treeView1.SelectedNode != null)
-            {
-                if (treeView1.SelectedNode.Tag != null)
-                {
-                    comp = (BaseComponent)treeView1.SelectedNode.Tag;
-                    return true;
-                }
-            }
-            comp = null;
-            return false;
+            comp = selectedComponent;
+            if (selectedComponent == null)
+                return false;
+            return true;
+
         }
 
         private void TreeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            BaseComponent selectedComponent;
-            if (TryGetSelectedComponent(out selectedComponent))
+            if (treeView1.SelectedNode != null)
             {
-                propertyGrid1.SelectedObject = selectedComponent;
-                selectedComponent.PropertyChanged += SelectedComponent_PropertyChanged;
-                SelectedComponent_PropertyChanged(selectedComponent, null);
+                if (treeView1.SelectedNode.Tag != null)
+                {
+                    selectedComponent = (BaseComponent)treeView1.SelectedNode.Tag;
+                    propertyGrid1.SelectedObject = selectedComponent;
+                    selectedComponent.PropertyChanged += SelectedComponent_PropertyChanged;
+                    SelectedComponent_PropertyChanged(selectedComponent, null);
+                }
             }
         }
 
