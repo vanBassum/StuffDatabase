@@ -155,12 +155,27 @@ namespace StuffDatabase
                     break;
                     */
                 default:
+                    List<string> expanedNodes = new List<string>();
+
+                    foreach (TreeNode nt in treeView1.Nodes)
+                        if (nt.IsExpanded)
+                            expanedNodes.Add(nt.Text);
+
                     treeView1.Nodes.Clear();
                     foreach (BaseComponent component in componentDB)
                     {
                         if (Filter(component))
                             AddNode(component);
                     }
+
+                    foreach (string s in expanedNodes)
+                    {
+                        TreeNode tn = treeView1.Nodes[s];
+                        if (tn != null)
+                            tn.Expand();
+                    }
+                        
+
                     break;
             }
         }
@@ -269,6 +284,17 @@ namespace StuffDatabase
                         System.Diagnostics.Process.Start(selectedComponent.Datasheet);
                 }
             }
+        }
+
+        private void btn_ImportAllTransistors_Click(object sender, EventArgs e)
+        {
+            Frm_ImportAllTransistors form = new Frm_ImportAllTransistors();
+            if(form.ShowDialog() == DialogResult.OK)
+            {
+                componentDB.Add(form.NewTransistor);
+                selectedComponent = componentDB.Last();
+            }
+            form.Dispose();
         }
     }
 }
