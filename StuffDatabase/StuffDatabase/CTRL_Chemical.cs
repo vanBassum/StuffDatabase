@@ -15,22 +15,23 @@ namespace StuffDatabase
 
     public partial class CTRL_Chemical : UserControl
     {
-        readonly SaveableBindingList<Chemical> chemicalDB = new SaveableBindingList<Chemical>(@"Resources\Chemicals\Database.json");
+        readonly SaveableBindingList<Chemical> chemicalDB;
 
         public CTRL_Chemical()
         {
             InitializeComponent();
+            chemicalDB = new SaveableBindingList<Chemical>(Settings.ChemicalDB);
         }
 
         private void CTRL_Chemical_Load(object sender, EventArgs e)
         {
-            if (Directory.Exists(@"Resources\Chemicals\Templates"))
-                foreach (string file in Directory.GetFiles(@"Resources\Chemicals\Templates", "*.label"))
+            if (Directory.Exists(Settings.ChemicalTemplates))
+                foreach (string file in Directory.GetFiles(Settings.ChemicalTemplates, "*.label"))
                     comboBox1.Items.Add(new Template<Chemical>(file));
 
             try
             {
-                foreach (string ghsFile in Directory.GetFiles(@"Resources\Chemicals\Symbols", "*.png"))
+                foreach (string ghsFile in Directory.GetFiles(Settings.ChemicalSymbols, "*.png"))
                 {
                     CheckBox cb = new CheckBox() { Text = Path.GetFileNameWithoutExtension(ghsFile), Tag = ghsFile };
                     flowLayoutPanel1.Controls.Add(cb);

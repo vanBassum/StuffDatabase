@@ -82,6 +82,7 @@
     <Compile Include="MultiLineTextEditor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="Template.cs" />
     <EmbeddedResource Include="CTRL_Chemical.resx">
       <DependentUpon>CTRL_Chemical.cs</DependentUpon>

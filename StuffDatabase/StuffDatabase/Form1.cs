@@ -21,8 +21,13 @@ namespace StuffDatabase
         private void Form1_Load(object sender, EventArgs e)
         {
             this.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            Settings.Load("Settings.json");
         }
 
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Settings.Save("Settings.json");
+        }
     }
 
 }

@@ -48,8 +48,8 @@ namespace StuffDatabase
                             PropertyInfo propInfo = obj.GetType().GetProperty(m.Groups[1].Value);
                             if (propInfo != null)
                             {
-                                string txt = propInfo.GetValue(obj).ToString();
-                                label.FillLabelObject(name, txt);
+                                object propVal = propInfo.GetValue(obj);
+                                label.FillLabelObject(name, propVal);
                             }
                         }
 
