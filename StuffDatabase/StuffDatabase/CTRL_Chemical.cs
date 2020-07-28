@@ -15,16 +15,17 @@ namespace StuffDatabase
 
     public partial class CTRL_Chemical : UserControl
     {
-        readonly SaveableBindingList<Chemical> chemicalDB;
+        SaveableBindingList<Chemical> chemicalDB;
 
         public CTRL_Chemical()
         {
             InitializeComponent();
-            chemicalDB = new SaveableBindingList<Chemical>(Settings.ChemicalDB);
+            
         }
 
         private void CTRL_Chemical_Load(object sender, EventArgs e)
         {
+            chemicalDB = new SaveableBindingList<Chemical>(Settings.ChemicalDB);
             if (Directory.Exists(Settings.ChemicalTemplates))
                 foreach (string file in Directory.GetFiles(Settings.ChemicalTemplates, "*.label"))
                     comboBox1.Items.Add(new Template<Chemical>(file));

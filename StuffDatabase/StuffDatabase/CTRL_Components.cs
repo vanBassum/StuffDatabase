@@ -16,17 +16,18 @@ namespace StuffDatabase
 {
     public partial class CTRL_Components : UserControl
     {
-        readonly SaveableBindingList<BaseComponent> componentDB;
+        SaveableBindingList<BaseComponent> componentDB;
         private Predicate<BaseComponent> Filter { get; set; } = (a) => (true);
         BaseComponent selectedComponent = null;
         public CTRL_Components()
         {
             InitializeComponent();
-            componentDB = new SaveableBindingList<BaseComponent>(Settings.ComponentDB);
+            
         }
 
         private void CTRL_Components_Load(object sender, EventArgs e)
         {
+            componentDB = new SaveableBindingList<BaseComponent>(Settings.ComponentDB);
             if (Directory.Exists(Settings.ComponentTemplates))
                 foreach (string file in Directory.GetFiles(Settings.ComponentTemplates, "*.label"))
                     comboBox1.Items.Add(new Template<BaseComponent>(file));

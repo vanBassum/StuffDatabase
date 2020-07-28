@@ -1,5 +1,7 @@
 ﻿using STDLib.Saveable;
+using STDLib.Serializers;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.CompilerServices;
 
 namespace StuffDatabase
@@ -14,4 +16,11 @@ namespace StuffDatabase
         public static string ChemicalSymbols { get { return GetPar(@"Resources\Chemicals\Symbols"); } set { SetPar(value); } }
 
     }
+
+
+
+
+
+
+
 }

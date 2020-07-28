@@ -1,6 +1,7 @@
 ﻿using STDLib.Misc;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 
 namespace StuffDatabase
 {
@@ -22,7 +23,8 @@ namespace StuffDatabase
             {
                 foreach (GHS ghs in GHSitems)
                 {
-                    Image ghsImg = Image.FromFile(ghs.ImageFile);
+                    string fullPath = Path.Combine(Settings.ChemicalSymbols, ghs.ImageFile);
+                    Image ghsImg = Image.FromFile(fullPath);
                     g.DrawImage(ghsImg, xPos, 0);
                     xPos += ghsImg.Width;
                     ghsImg.Dispose();
