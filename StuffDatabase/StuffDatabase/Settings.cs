@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 
 namespace StuffDatabase
 {
-    public sealed class Settings : StaticSaveableSettings
+    public sealed class Settings : BaseSettings
     {
         public static string ComponentDB { get { return GetPar(@"Resources\Components\Database.json"); } set { SetPar(value); } }
         public static string ComponentTemplates { get { return GetPar(@"Resources\Components\Templates"); } set { SetPar(value); } }
