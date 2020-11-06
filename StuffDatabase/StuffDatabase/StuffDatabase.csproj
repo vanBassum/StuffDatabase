@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Chemical.cs" />
     <Compile Include="Components\BaseComponent.cs" />
+    <Compile Include="Components\Capacitor.cs" />
     <Compile Include="Components\FET.cs" />
     <Compile Include="Components\Resistor.cs" />
     <Compile Include="Components\Transistor.cs" />
@@ -60,11 +61,11 @@
     <Compile Include="CTRL_Chemical.Designer.cs">
       <DependentUpon>CTRL_Chemical.cs</DependentUpon>
     </Compile>
-    <Compile Include="CTRL_Components.cs">
+    <Compile Include="CTRL_Component.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="CTRL_Components.Designer.cs">
-      <DependentUpon>CTRL_Components.cs</DependentUpon>
+    <Compile Include="CTRL_Component.Designer.cs">
+      <DependentUpon>CTRL_Component.cs</DependentUpon>
     </Compile>
     <Compile Include="Dymo.cs" />
     <Compile Include="Ext.cs" />
@@ -88,8 +89,8 @@
     <EmbeddedResource Include="CTRL_Chemical.resx">
       <DependentUpon>CTRL_Chemical.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CTRL_Components.resx">
-      <DependentUpon>CTRL_Components.cs</DependentUpon>
+    <EmbeddedResource Include="CTRL_Component.resx">
+      <DependentUpon>CTRL_Component.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

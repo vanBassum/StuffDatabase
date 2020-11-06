@@ -3,6 +3,7 @@ using System;
 using System.ComponentModel;
 using System.Drawing.Design;
 using System.IO;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace StuffDatabase.Components
@@ -44,6 +45,15 @@ namespace StuffDatabase.Components
             if (!m.Success)
                 return null;
             return m.Groups[1].Value;
+        }
+
+        public void Populate(BaseComponent comp)
+        {
+            if (this.GetType() != comp.GetType())
+                throw new Exception("Type mismatch");
+
+            foreach(PropertyInfo pi in comp.GetType().GetProperties())
+                pi.SetValue(this, pi.GetValue(comp));
         }
     }
 

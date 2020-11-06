@@ -44,7 +44,7 @@ namespace StuffDatabase
                     s += largePrefix[thousands - 1];
 
             if (thousands < 0)
-                if (Math.Abs(thousands) < largePrefix.Length)
+                if (Math.Abs(thousands) < smallPrefix.Length)
                     s += smallPrefix[Math.Abs(thousands) - 1];
             if (negative)
                 s = $"-{s}";
