@@ -293,7 +293,7 @@ namespace StuffDatabase
             Frm_ImportAllTransistors form = new Frm_ImportAllTransistors();
             if(form.ShowDialog() == DialogResult.OK)
             {
-                componentDB.Add(form.NewTransistor);
+                componentDB.Add(form.NewComponent);
                 selectedComponent = componentDB.Last();
             }
             form.Dispose();

@@ -72,6 +72,28 @@ namespace StuffDatabase.Components
                 }
             }
         }
-    }
 
+        public static Transistor ParseFromAlltransistor(string page)
+        {
+            Transistor tor  = new Transistor();
+
+            Match m = Regex.Match(page, "Type Designator: (.+)");
+            if (!m.Success)
+                return null;
+            tor.Name = m.Groups[1].Value;
+
+            m = Regex.Match(page, "Polarity: (.+)");
+            if (!m.Success)
+                return null;
+            tor.Function = m.Groups[1].Value;
+
+            tor.PD = ParseDouble(page, @"Collector Power Dissipation[^\d]+([\d\.]+)");
+            tor.VCE = ParseDouble(page, @"Collector-Emitter Voltage[^\d]+([\d\.]+)");
+            tor.IC = ParseDouble(page, @"Collector Current[^\d]+([\d\.]+)");
+            tor.FT = ParseDouble(page, @"Transition Frequency[^\d]+([\d\.]+)");
+            tor.HFE = ParseDouble(page, @"Forward Current Transfer Ratio[^\d]+([\d\.]+)");
+            return tor;
+        }
+
+    }
 }

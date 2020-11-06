@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Chemical.cs" />
     <Compile Include="Components\BaseComponent.cs" />
+    <Compile Include="Components\FET.cs" />
     <Compile Include="Components\Resistor.cs" />
     <Compile Include="Components\Transistor.cs" />
     <Compile Include="CTRL_Chemical.cs">

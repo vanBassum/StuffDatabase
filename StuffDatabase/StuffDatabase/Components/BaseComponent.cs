@@ -3,6 +3,7 @@ using System;
 using System.ComponentModel;
 using System.Drawing.Design;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace StuffDatabase.Components
 {
@@ -25,6 +26,24 @@ namespace StuffDatabase.Components
         {
             string space = (MaxNameLength - Name.Length) > 0 ? new string(' ', MaxNameLength - Name.Length) : " ";
             return Name.TrimEnd(' ') + space + Description.Replace('\n', ' ').TrimStart(' ');
+        }
+
+
+        public static double ParseDouble(string page, string pattern)
+        {
+            Match m = Regex.Match(page, pattern);
+            if (!m.Success)
+                return 0;
+            double d = double.Parse(m.Groups[1].Value.Replace('.',','));
+            return d;
+        }
+
+        public static string ParseString(string page, string pattern)
+        {
+            Match m = Regex.Match(page, pattern);
+            if (!m.Success)
+                return null;
+            return m.Groups[1].Value;
         }
     }
 

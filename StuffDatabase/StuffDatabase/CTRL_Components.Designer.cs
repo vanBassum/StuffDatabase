@@ -36,11 +36,11 @@
             this.btn_New = new System.Windows.Forms.Button();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.btn_ImportAllTransistors = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.btn_ImportAllTransistors = new System.Windows.Forms.Button();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -157,17 +157,6 @@
             this.splitContainer1.SplitterDistance = 289;
             this.splitContainer1.TabIndex = 16;
             // 
-            // btn_ImportAllTransistors
-            // 
-            this.btn_ImportAllTransistors.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_ImportAllTransistors.Location = new System.Drawing.Point(202, 57);
-            this.btn_ImportAllTransistors.Name = "btn_ImportAllTransistors";
-            this.btn_ImportAllTransistors.Size = new System.Drawing.Size(50, 34);
-            this.btn_ImportAllTransistors.TabIndex = 17;
-            this.btn_ImportAllTransistors.Text = "Fetch\r\nTOR\r\n";
-            this.btn_ImportAllTransistors.UseVisualStyleBackColor = true;
-            this.btn_ImportAllTransistors.Click += new System.EventHandler(this.btn_ImportAllTransistors_Click);
-            // 
             // tabControl1
             // 
             this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -222,6 +211,17 @@
             this.splitContainer2.Size = new System.Drawing.Size(255, 372);
             this.splitContainer2.SplitterDistance = 186;
             this.splitContainer2.TabIndex = 14;
+            // 
+            // btn_ImportAllTransistors
+            // 
+            this.btn_ImportAllTransistors.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_ImportAllTransistors.Location = new System.Drawing.Point(202, 57);
+            this.btn_ImportAllTransistors.Name = "btn_ImportAllTransistors";
+            this.btn_ImportAllTransistors.Size = new System.Drawing.Size(50, 34);
+            this.btn_ImportAllTransistors.TabIndex = 17;
+            this.btn_ImportAllTransistors.Text = "Fetch\r\nTOR\r\n";
+            this.btn_ImportAllTransistors.UseVisualStyleBackColor = true;
+            this.btn_ImportAllTransistors.Click += new System.EventHandler(this.btn_ImportAllTransistors_Click);
             // 
             // propertyGrid1
             // 
