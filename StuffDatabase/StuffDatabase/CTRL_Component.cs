@@ -11,6 +11,7 @@ using STDLib.Saveable;
 using System.IO;
 using System.Collections.ObjectModel;
 using StuffDatabase.Components;
+using System.Reflection;
 
 namespace StuffDatabase
 {
@@ -23,6 +24,7 @@ namespace StuffDatabase
         string TemplateFolder { get { return CreatePathIfNotExist(Path.Combine(Settings.ComponentData, ComponentType.Name, "Templates")); } }
         string DatasheetFolder { get { return CreatePathIfNotExist(Path.Combine(Settings.ComponentData, ComponentType.Name, "Datasheets")); } }
 
+        public bool ChangePending { get; set; } = false;
 
         string CreatePathIfNotExist(string path)
         {
@@ -52,6 +54,7 @@ namespace StuffDatabase
 
         private void Components_ListChanged(object sender, ListChangedEventArgs e)
         {
+            ChangePending = true;
             switch (e.ListChangedType)
             {
                 case ListChangedType.ItemAdded:
@@ -117,7 +120,6 @@ namespace StuffDatabase
                 EditCompOrigional.Populate(EditCompNew);
                 if(!Components.Contains(EditCompOrigional))
                     Components.Add(EditCompOrigional);
-                Components.Save();
             }
             SetUIEditMode(false);
             Render(EditCompOrigional);
@@ -205,7 +207,6 @@ namespace StuffDatabase
             if (selectedComponent != null)
             {
                 Components.Remove(selectedComponent);
-                Components.Save();
             }
         }
 
@@ -219,17 +220,148 @@ namespace StuffDatabase
             }
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+
+        public void Search(string searchString)
         {
-            if(textBox1.Text == "")
+            if (searchString == "")
                 Filter = (a) => a.GetType() == ComponentType;
             else
-                Filter = (a) => a.GetType() == ComponentType && a.Name.ToLower().Contains(textBox1.Text.ToLower());
+                Filter = (a) => a.GetType() == ComponentType && a.Name.ToLower().Contains(searchString.ToLower());
 
             RePopulateList(true);
         }
+
+        public void Export(string file)
+        {
+
+            using (StreamWriter writer = new StreamWriter(file))
+            {
+                PropertyInfo[] pis = ComponentType.GetProperties();
+                foreach (PropertyInfo pi in pis)
+                {
+                    writer.Write($"\"{pi.Name}\"" + ((pi == pis.Last())?"\r\n":","));
+                }
+
+                foreach (BaseComponent component in Components)
+                {
+                    if (Filter(component))
+                    {
+                        foreach (PropertyInfo pi in pis)
+                        {
+                            object val = pi.GetValue(component);
+                            switch (val)
+                            {
+                                case double v:
+                                    writer.Write($"\"{v.ToString("E")}\"" + ((pi == pis.Last()) ? "\r\n" : ","));
+                                    break;
+
+                                default:
+                                    writer.Write($"\"{val}\"" + ((pi == pis.Last()) ? "\r\n" : ","));
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public void Import(string file)
+        {
+            List<PropertyInfo> props = new List<PropertyInfo>();
+            SaveableBindingList<BaseComponent> comps = new SaveableBindingList<BaseComponent>();
+
+            using (StreamReader reader = new StreamReader(file))
+            {
+                //Read header
+
+                string header = reader.ReadLine();
+
+                foreach(string propName in header.Split(','))
+                {
+                    PropertyInfo pi = ComponentType.GetProperty(propName.Trim('"'));
+                    if (pi == null)
+                        throw new Exception("Property not found.");
+                    props.Add(pi);
+                }
+
+                while(!reader.EndOfStream)
+                {
+                    List<string> values = new List<string>();
+                    string line = reader.ReadLine();
+
+                    string val = "";
+                    bool b = false;
+                    foreach(char c in line)
+                    {
+                        if (c == '"')
+                            b = !b;
+                        else
+                        {
+                            if (b)
+                                val += c;
+                            else
+                            {
+                                if (c == ',')
+                                {
+                                    values.Add(val);
+                                    val = "";
+                                }
+
+                                else
+                                    val += c;
+                            }
+                        }
+
+                    }
+
+                    
+
+                    BaseComponent comp = (BaseComponent)Activator.CreateInstance(ComponentType);
+
+                    for (int i = 0; i < values.Count; i++)
+                    {
+                        if(props[i].PropertyType == typeof(double))
+                        {
+                            props[i].SetValue(comp, double.Parse(values[i]));
+                        }
+                        else
+                        {
+                            props[i].SetValue(comp, values[i]);
+                        }
+
+                        
+                    }
+                    comps.Add(comp);
+                }
+
+            }
+
+            Frm_Import frm = new Frm_Import(comps, ComponentType);
+
+            if (frm.ShowDialog() == DialogResult.OK)
+            {
+                bool overrideExisting = frm.OverrideExisting;
+                foreach(BaseComponent comp in comps)
+                {
+                    int ind = Components.IndexOf(Components.FirstOrDefault(c => c.Name == comp.Name && c.Function == comp.Function));
+                    if(ind == -1)
+                    {
+                        Components.Add(comp);           //Add new component
+                    }
+                    else
+                    {
+                        if(overrideExisting)
+                        {
+                            Components.RemoveAt(ind);   //Override existing
+                            Components.Add(comp);
+                        }
+                        else
+                        {
+                            //TODO ask???
+                        }
+                    }
+                }
+            }
+        }
     }
-
-
-
 }

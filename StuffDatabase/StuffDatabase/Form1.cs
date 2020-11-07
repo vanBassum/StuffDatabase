@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using DYMO.Label.Framework;
 using STDLib.Saveable;
 using StuffDatabase.Components;
 
@@ -38,12 +39,35 @@ namespace StuffDatabase
                 ctrl.Components = componentDB;
                 ctrl.Dock = DockStyle.Fill;
                 tabPage.Controls.Add(ctrl);
+                tabPage.Tag = ctrl;
             }
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
+            
+
+            bool save = false;
+            foreach (TabPage tp in tabControl2.TabPages)
+            {
+                CTRL_Component ctrl = tp.Tag as CTRL_Component;
+                if (ctrl.ChangePending)
+                {
+                    if (MessageBox.Show("Do you want to save changes to your text?", "My Application", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        e.Cancel = true;
+                        save = true;
+                    }
+                    break;
+                }
+            }
+
+            if (save)
+                componentDB.Save();
+            
+
             Settings.Save("Settings.json");
+            e.Cancel = false;
         }
 
         public IEnumerable<Type> FindSubClassesOf<TBaseType>()
@@ -52,6 +76,67 @@ namespace StuffDatabase
             var assembly = baseType.Assembly;
 
             return assembly.GetTypes().Where(t => t.IsSubclassOf(baseType));
+        }
+
+        private void toolStripTextBox1_Enter(object sender, EventArgs e)
+        {
+            ToolStripTextBox tb = sender as ToolStripTextBox;
+
+            if (tb.Text == "Search")
+            {
+                tb.Text = "";
+                tb.ForeColor = System.Drawing.Color.Black;
+            }
+        }
+
+        private void toolStripTextBox1_TextChanged(object sender, EventArgs e)
+        {
+            ToolStripTextBox tb = sender as ToolStripTextBox;
+            if (GetSelectedControl() is CTRL_Component ctrl)
+                ctrl.Search(tb.Text);
+        }
+
+
+
+        object GetSelectedControl()
+        {
+            if (tabControl1.SelectedIndex == 0)
+            {
+                if (tabControl2.SelectedTab?.Tag is CTRL_Component comp)
+                    return comp;
+            }
+            return null;
+        }
+
+        private void importToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            OpenFileDialog diag = new OpenFileDialog();
+            diag.Filter = "CSV file (*.csv)|*.csv";
+            if (diag.ShowDialog() == DialogResult.OK)
+            {
+                ToolStripTextBox tb = sender as ToolStripTextBox;
+                if (GetSelectedControl() is CTRL_Component ctrl)
+                    ctrl.Import(diag.FileName);
+            }
+        }
+
+        private void exportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog diag = new SaveFileDialog();
+            diag.Filter = "CSV file (*.csv)|*.csv";
+            if (diag.ShowDialog() == DialogResult.OK)
+            {
+                ToolStripTextBox tb = sender as ToolStripTextBox;
+                if (GetSelectedControl() is CTRL_Component ctrl)
+                    ctrl.Export(diag.FileName);
+            }
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            componentDB.Save();
+
         }
     }
 

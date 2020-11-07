@@ -20,8 +20,6 @@ namespace StuffDatabase.Components
         [Browsable(false)]
         public string Datasheet { get { return GetPar(""); } set { SetPar(value); } }
 
-
-
         private static int MaxNameLength { get; set; }
         public override string ToString()
         {
@@ -56,5 +54,4 @@ namespace StuffDatabase.Components
                 pi.SetValue(this, pi.GetValue(comp));
         }
     }
-
 }

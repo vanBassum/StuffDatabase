@@ -75,6 +75,12 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Frm_Import.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Frm_Import.Designer.cs">
+      <DependentUpon>Frm_Import.cs</DependentUpon>
+    </Compile>
     <Compile Include="Frm_ImportAllTransistors.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -94,6 +100,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Frm_Import.resx">
+      <DependentUpon>Frm_Import.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Frm_ImportAllTransistors.resx">
       <DependentUpon>Frm_ImportAllTransistors.cs</DependentUpon>
@@ -129,6 +138,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\pdf-icon-datasheet.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
