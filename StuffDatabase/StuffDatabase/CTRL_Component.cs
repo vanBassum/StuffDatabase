@@ -363,5 +363,13 @@ namespace StuffDatabase
                 }
             }
         }
+
+        private void treeView1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Control && e.KeyCode == Keys.P)
+            {
+                btn_Print_Click(null, null);
+            }
+        }
     }
 }

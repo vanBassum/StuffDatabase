@@ -5,16 +5,20 @@ using System.Text.RegularExpressions;
 
 namespace StuffDatabase.Components
 {
-    public class Resistor : BaseComponent, ILabelConvertable
+    public class Opamp : BaseComponent, ILabelConvertable
     {
         [Category("Specifics")]
-        public double Resistance { get { return GetPar<double>(0); } set { SetPar<double>(value); } }
+        public double UnityGainBandwidth { get { return GetPar<double>(0); } set { SetPar<double>(value); } }
 
         [Category("Specifics")]
-        public double Tolerance { get { return GetPar<double>(0); } set { SetPar<double>(value); } }
+        public double Slewrate { get { return GetPar<double>(0); } set { SetPar<double>(value); } }
 
         [Category("Specifics")]
-        public double Power { get { return GetPar<double>(0); } set { SetPar<double>(value); } }
+        public double IOut { get { return GetPar<double>(0); } set { SetPar<double>(value); } }
+
+
+
+
 
         string Spacing(double var, int space = 8)
         {
@@ -34,15 +38,6 @@ namespace StuffDatabase.Components
                 {
                     switch (m.Groups[1].Value)
                     {
-
-                        case nameof(Resistor.Tolerance):
-                            label.FillLabelObject(name, $"Tol {Spacing(Tolerance)}%");
-                            break;
-
-                        case nameof(Resistor.Power):
-                            label.FillLabelObject(name, $"Pow {Spacing(Power)}W");
-                            break;
-
                         default:
                             PropertyInfo propInfo = this.GetType().GetProperty(m.Groups[1].Value);
                             if (propInfo != null)

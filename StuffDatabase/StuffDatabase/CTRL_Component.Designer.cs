@@ -104,11 +104,12 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.treeView1.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.treeView1.Location = new System.Drawing.Point(3, 0);
+            this.treeView1.Location = new System.Drawing.Point(3, -3);
             this.treeView1.Name = "treeView1";
             this.treeView1.Size = new System.Drawing.Size(359, 505);
             this.treeView1.TabIndex = 15;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
+            this.treeView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.treeView1_KeyDown);
             // 
             // splitContainer1
             // 

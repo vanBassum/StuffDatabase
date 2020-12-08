@@ -21,7 +21,7 @@ namespace StuffDatabase
 
         public Form1()
         {
-            Settings.Load("Settings.json");
+            Settings.Load();
             InitializeComponent();
         }
 
@@ -53,7 +53,7 @@ namespace StuffDatabase
                 CTRL_Component ctrl = tp.Tag as CTRL_Component;
                 if (ctrl.ChangePending)
                 {
-                    if (MessageBox.Show("Do you want to save changes to your text?", "My Application", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    if (MessageBox.Show("Do you want to save changes?", "My Application", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         e.Cancel = true;
                         save = true;
@@ -66,7 +66,7 @@ namespace StuffDatabase
                 componentDB.Save();
             
 
-            Settings.Save("Settings.json");
+            Settings.Save();
             e.Cancel = false;
         }
 
