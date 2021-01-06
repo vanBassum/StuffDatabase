@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using DYMO.Label.Framework;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 

@@ -100,11 +100,8 @@ namespace StuffDatabase
 
         object GetSelectedControl()
         {
-            if (tabControl1.SelectedIndex == 0)
-            {
-                if (tabControl2.SelectedTab?.Tag is CTRL_Component comp)
-                    return comp;
-            }
+            if (tabControl2.SelectedTab?.Tag is CTRL_Component comp)
+                return comp;
             return null;
         }
 
