@@ -34,7 +34,6 @@
             this.btn_New = new System.Windows.Forms.Button();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.btn_Import = new System.Windows.Forms.Button();
             this.btn_Edit = new System.Windows.Forms.Button();
             this.btn_Print = new System.Windows.Forms.Button();
             this.btn_Delete = new System.Windows.Forms.Button();
@@ -121,7 +120,6 @@
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.btn_Import);
             this.splitContainer1.Panel1.Controls.Add(this.btn_Edit);
             this.splitContainer1.Panel1.Controls.Add(this.btn_New);
             this.splitContainer1.Panel1.Controls.Add(this.btn_Print);
@@ -136,16 +134,6 @@
             this.splitContainer1.Size = new System.Drawing.Size(702, 548);
             this.splitContainer1.SplitterDistance = 365;
             this.splitContainer1.TabIndex = 16;
-            // 
-            // btn_Import
-            // 
-            this.btn_Import.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btn_Import.Location = new System.Drawing.Point(295, 511);
-            this.btn_Import.Name = "btn_Import";
-            this.btn_Import.Size = new System.Drawing.Size(67, 34);
-            this.btn_Import.TabIndex = 17;
-            this.btn_Import.Text = "Fetch\r\nTOR\r\n";
-            this.btn_Import.UseVisualStyleBackColor = true;
             // 
             // btn_Edit
             // 
@@ -264,7 +252,6 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.PropertyGrid propertyGrid1;
         private System.Windows.Forms.SplitContainer splitContainer2;
-        private System.Windows.Forms.Button btn_Import;
         private System.Windows.Forms.Button btn_Edit;
         private System.Windows.Forms.Button btn_Print;
         private System.Windows.Forms.Button btn_Delete;

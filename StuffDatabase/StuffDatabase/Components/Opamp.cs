@@ -17,9 +17,6 @@ namespace StuffDatabase.Components
         public double IOut { get { return GetPar<double>(0); } set { SetPar<double>(value); } }
 
 
-
-
-
         string Spacing(double var, int space = 8)
         {
             string hrd = Ext.ToHumanReadable(var, 0);

@@ -133,7 +133,6 @@ namespace StuffDatabase
             btn_Save.Enabled = editMode;
             btn_Print.Enabled = !editMode;
             btn_New.Enabled = !editMode;
-            btn_Import.Enabled = !editMode;
             btn_Delete.Enabled = !editMode;
             comboBox1.Enabled = !editMode;
             propertyGrid1.Enabled = editMode;
