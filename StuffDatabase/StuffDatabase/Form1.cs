@@ -36,6 +36,8 @@ namespace StuffDatabase
             descriptors = new SaveableBindingList<Descriptor>(Settings.Items.PartDescriptorsDatabaseFile);
             descriptors.ListChanged += Descriptors_ListChanged;
             Descriptors_ListChanged(descriptors, new ListChangedEventArgs(ListChangedType.Reset, -1));
+
+            //TODO check for missing descriptors!
         }
 
         
@@ -50,13 +52,13 @@ namespace StuffDatabase
                         foreach (Descriptor descriptor in list)
                         {
                             TabPage tabPage = new TabPage(descriptor.Name);
-                            CollectionEditControl editDialog = new CollectionEditControl();
-                            editDialog.CreateObject = () => Part.Create(descriptor);
-                            editDialog.Dock = DockStyle.Fill;
-                            editDialog.DataSource = new FilteredBindingList<Part>(parts) { Filter = new Predicate<Part>(a=>a.Descriptor.Name == descriptor.Name) };
-                            editDialog.DisplayMember = nameof(Part.Name);
-                            editDialog.ObjectChanged += EditDialog_ObjectChanged;
-                            tabPage.Controls.Add(editDialog);
+                            TabPageCTRL ctrl = new TabPageCTRL();
+                            tabPage.Tag = ctrl;
+                            ctrl.Descriptor = descriptor;
+                            ctrl.Dock = DockStyle.Fill;
+                            ctrl.DataSource = new FilteredBindingList<Part>(parts) { Filter = new Predicate<Part>(a => a.Descriptor.Name == descriptor.Name) };
+                            ctrl.ObjectChanged += EditDialog_ObjectChanged;
+                            tabPage.Controls.Add(ctrl);
                             tabControl1.TabPages.Add(tabPage);
                         }
                     }
@@ -107,41 +109,10 @@ namespace StuffDatabase
         private void toolStripTextBox1_TextChanged(object sender, EventArgs e)
         {
             ToolStripTextBox tb = sender as ToolStripTextBox;
-            //if (GetSelectedControl() is CTRL_Component ctrl)
-            //    ctrl.Search(tb.Text);
-        }
 
-
-
-        object GetSelectedControl()
-        {
-            //if (tabControl2.SelectedTab?.Tag is CTRL_Component comp)
-            //    return comp;
-            return null;
-        }
-
-        private void importToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-            OpenFileDialog diag = new OpenFileDialog();
-            diag.Filter = "CSV file (*.csv)|*.csv";
-            if (diag.ShowDialog() == DialogResult.OK)
+            if(tabControl1.SelectedTab.Tag is TabPageCTRL ctrl)
             {
-                ToolStripTextBox tb = sender as ToolStripTextBox;
-                //if (GetSelectedControl() is CTRL_Component ctrl)
-                //    ctrl.Import(diag.FileName);
-            }
-        }
-
-        private void exportToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SaveFileDialog diag = new SaveFileDialog();
-            diag.Filter = "CSV file (*.csv)|*.csv";
-            if (diag.ShowDialog() == DialogResult.OK)
-            {
-                ToolStripTextBox tb = sender as ToolStripTextBox;
-                //if (GetSelectedControl() is CTRL_Component ctrl)
-                //    ctrl.Export(diag.FileName);
+                ctrl.DataSource.Filter = (a) => a.Descriptor.Name == ctrl.Descriptor.Name && a.Name.Contains(tb.Text);
             }
         }
 
@@ -149,8 +120,7 @@ namespace StuffDatabase
         {
             parts.Save();
             descriptors.Save();
-            //componentDB.Save();
-
+            Settings.Save();
         }
 
         private void componentsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -160,6 +130,9 @@ namespace StuffDatabase
             diag.ShowDialog();
             changePending = true;
         }
+
+        
+
     }
 
 }

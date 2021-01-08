@@ -15,7 +15,6 @@ namespace StuffDatabase
 
         public string Name { get { return GetPar<string>(""); } set { SetPar(value); } }
 
-
         public override string ToString()
         {
             return Name;

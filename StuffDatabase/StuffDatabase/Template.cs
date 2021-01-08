@@ -13,7 +13,7 @@ namespace StuffDatabase
     }
 
 
-    public class Template<T>
+    public class Template
     {
         public string File { get; set; }
 
@@ -27,7 +27,7 @@ namespace StuffDatabase
             File = file;
         }
 
-        public DYMO.Label.Framework.ILabel GetLabel(T obj)
+        public DYMO.Label.Framework.ILabel GetLabel(object obj)
         {
             DYMO.Label.Framework.ILabel label = DYMO.Label.Framework.DieCutLabel.Open(File);
 
@@ -49,10 +49,19 @@ namespace StuffDatabase
                             if (propInfo != null)
                             {
                                 object propVal = propInfo.GetValue(obj);
-                                label.FillLabelObject(name, propVal);
+                                switch (propVal)
+                                {
+                                    case double v:
+                                        label.FillLabelObject(name, v.ToHumanReadable());
+                                        break;
+                                    default:
+                                        label.FillLabelObject(name, propVal);
+                                        break;
+                                }
+
+                                
                             }
                         }
-
                     }
                     break;
             }
