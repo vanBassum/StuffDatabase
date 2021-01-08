@@ -60,35 +60,6 @@ namespace StuffDatabase
             return label;
         }
 
-        /*
-
-        public DYMO.Label.Framework.ILabel GetLabel(T[] objs)
-        {
-            DYMO.Label.Framework.ILabel label = DYMO.Label.Framework.DieCutLabel.Open(File);
-
-            foreach (DYMO.Label.Framework.ILabelObject labelObj in label.Objects)
-            {
-                string name = labelObj.Name;
-
-                Match m = Regex.Match(name, @"(.+?)_(\d+)");
-
-                if (m.Success)
-                {
-                    PropertyInfo propInfo = typeof(T).GetProperty(m.Groups[1].Value);
-                    int ind = int.Parse(m.Groups[2].Value);
-                    if (propInfo != null)
-                        label.FillLabelObject(name, propInfo.GetValue(objs[ind]));
-                }
-            }
-            return label;
-        }
-        */
-
-
-
-        
-
-
         public override string ToString()
         {
             return Path.GetFileNameWithoutExtension(File);

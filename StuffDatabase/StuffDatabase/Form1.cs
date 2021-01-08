@@ -2,21 +2,25 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using DYMO.Label.Framework;
+using FRMLib;
+using FRMLib.Controls;
+using STDLib.Misc;
 using STDLib.Saveable;
-using StuffDatabase.Components;
 
 namespace StuffDatabase
 {
+
     public partial class Form1 : Form
     {
-        SaveableBindingList<BaseComponent> componentDB;
+        bool changePending = false;
+        SaveableBindingList <Descriptor> descriptors;
+        PartList parts;
 
 
         public Form1()
@@ -27,46 +31,57 @@ namespace StuffDatabase
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            this.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            componentDB = new SaveableBindingList<BaseComponent>(Settings.ComponentDB);
+            this.Text = $"{Application.ProductName} V{Assembly.GetExecutingAssembly().GetName().Version.ToString(3)}";
+            parts = new PartList(Settings.Items.PartsDatabaseFile);
+            descriptors = new SaveableBindingList<Descriptor>(Settings.Items.PartDescriptorsDatabaseFile);
+            descriptors.ListChanged += Descriptors_ListChanged;
+            Descriptors_ListChanged(descriptors, new ListChangedEventArgs(ListChangedType.Reset, -1));
+        }
 
-            foreach (Type compType in FindSubClassesOf<BaseComponent>())
+        
+        private void Descriptors_ListChanged(object sender, ListChangedEventArgs e)
+        {
+            switch (e.ListChangedType)
             {
-                TabPage tabPage = new TabPage(compType.Name);
-                tabControl2.TabPages.Add(tabPage);
-
-                CTRL_Component ctrl = new CTRL_Component(compType);
-                ctrl.Components = componentDB;
-                ctrl.Dock = DockStyle.Fill;
-                tabPage.Controls.Add(ctrl);
-                tabPage.Tag = ctrl;
+                default:
+                    tabControl1.TabPages.Clear();
+                    if(sender is SaveableBindingList<Descriptor> list)
+                    {
+                        foreach (Descriptor descriptor in list)
+                        {
+                            TabPage tabPage = new TabPage(descriptor.Name);
+                            CollectionEditControl editDialog = new CollectionEditControl();
+                            editDialog.CreateObject = () => Part.Create(descriptor);
+                            editDialog.Dock = DockStyle.Fill;
+                            editDialog.DataSource = new FilteredBindingList<Part>(parts) { Filter = new Predicate<Part>(a=>a.Descriptor.Name == descriptor.Name) };
+                            editDialog.DisplayMember = nameof(Part.Name);
+                            editDialog.ObjectChanged += EditDialog_ObjectChanged;
+                            tabPage.Controls.Add(editDialog);
+                            tabControl1.TabPages.Add(tabPage);
+                        }
+                    }
+                    break;
             }
+        }
+
+        private void EditDialog_ObjectChanged(object sender, object e)
+        {
+            changePending = true;
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             
-
-            bool save = false;
-            foreach (TabPage tp in tabControl2.TabPages)
+            if(changePending || Settings.PendingChanges)
             {
-                CTRL_Component ctrl = tp.Tag as CTRL_Component;
-                if (ctrl.ChangePending)
+                if (MessageBox.Show("Do you want to save changes?", Application.ProductName, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    if (MessageBox.Show("Do you want to save changes?", "My Application", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    {
-                        e.Cancel = true;
-                        save = true;
-                    }
-                    break;
+                    descriptors.Save();
+                    parts.Save();
+                    Settings.Save();
                 }
+                changePending = false;
             }
-
-            if (save)
-                componentDB.Save();
-            
-
-            Settings.Save();
             e.Cancel = false;
         }
 
@@ -92,16 +107,16 @@ namespace StuffDatabase
         private void toolStripTextBox1_TextChanged(object sender, EventArgs e)
         {
             ToolStripTextBox tb = sender as ToolStripTextBox;
-            if (GetSelectedControl() is CTRL_Component ctrl)
-                ctrl.Search(tb.Text);
+            //if (GetSelectedControl() is CTRL_Component ctrl)
+            //    ctrl.Search(tb.Text);
         }
 
 
 
         object GetSelectedControl()
         {
-            if (tabControl2.SelectedTab?.Tag is CTRL_Component comp)
-                return comp;
+            //if (tabControl2.SelectedTab?.Tag is CTRL_Component comp)
+            //    return comp;
             return null;
         }
 
@@ -113,8 +128,8 @@ namespace StuffDatabase
             if (diag.ShowDialog() == DialogResult.OK)
             {
                 ToolStripTextBox tb = sender as ToolStripTextBox;
-                if (GetSelectedControl() is CTRL_Component ctrl)
-                    ctrl.Import(diag.FileName);
+                //if (GetSelectedControl() is CTRL_Component ctrl)
+                //    ctrl.Import(diag.FileName);
             }
         }
 
@@ -125,15 +140,25 @@ namespace StuffDatabase
             if (diag.ShowDialog() == DialogResult.OK)
             {
                 ToolStripTextBox tb = sender as ToolStripTextBox;
-                if (GetSelectedControl() is CTRL_Component ctrl)
-                    ctrl.Export(diag.FileName);
+                //if (GetSelectedControl() is CTRL_Component ctrl)
+                //    ctrl.Export(diag.FileName);
             }
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            componentDB.Save();
+            parts.Save();
+            descriptors.Save();
+            //componentDB.Save();
 
+        }
+
+        private void componentsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CollectionEditDialog diag = new CollectionEditDialog();
+            diag.DataSource = descriptors;
+            diag.ShowDialog();
+            changePending = true;
         }
     }
 

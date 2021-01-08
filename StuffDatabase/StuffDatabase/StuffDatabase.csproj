@@ -87,38 +87,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Chemical.cs" />
-    <Compile Include="Components\BaseComponent.cs" />
-    <Compile Include="Components\Capacitor.cs" />
-    <Compile Include="Components\FET.cs" />
-    <Compile Include="Components\Opamp.cs" />
-    <Compile Include="Components\Resistor.cs" />
-    <Compile Include="Components\Transistor.cs" />
-    <Compile Include="CTRL_Chemical.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CTRL_Chemical.Designer.cs">
-      <DependentUpon>CTRL_Chemical.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CTRL_Component.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CTRL_Component.Designer.cs">
-      <DependentUpon>CTRL_Component.cs</DependentUpon>
-    </Compile>
+    <Compile Include="PartList.cs" />
+    <Compile Include="Descriptor.cs" />
     <Compile Include="Dymo.cs" />
+    <Compile Include="Part.cs" />
     <Compile Include="Ext.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Frm_Import.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Frm_Import.Designer.cs">
-      <DependentUpon>Frm_Import.cs</DependentUpon>
     </Compile>
     <Compile Include="Frm_ImportAllTransistors.cs">
       <SubType>Form</SubType>
@@ -131,20 +109,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Template.cs" />
-    <EmbeddedResource Include="CTRL_Chemical.resx">
-      <DependentUpon>CTRL_Chemical.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CTRL_Component.resx">
-      <DependentUpon>CTRL_Component.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Frm_Import.resx">
-      <DependentUpon>Frm_Import.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Frm_ImportAllTransistors.resx">
       <DependentUpon>Frm_ImportAllTransistors.cs</DependentUpon>
@@ -174,6 +141,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Library\FRMLib\FRMLib.csproj">
+      <Project>{6062fc18-1c98-4f9a-be4c-44171cbcb55e}</Project>
+      <Name>FRMLib</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Library\STDLib\STDLib.csproj">
       <Project>{4be53117-f3b3-4b2e-9fc8-43e0d71cbf20}</Project>
       <Name>STDLib</Name>

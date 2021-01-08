@@ -6,15 +6,11 @@ using System.Runtime.CompilerServices;
 
 namespace StuffDatabase
 {
-    public sealed class Settings : BaseSettings<Settings>
+    public sealed class Settings : BaseSettingsV2<Settings>
     {
-        public static string ComponentDB { get { return GetPar(@"data\Components\Database.json"); } set { SetPar(value); } }
-        public static string ComponentData { get { return GetPar(@"data\Components"); } set { SetPar(value); } }
-
-        public static string ChemicalDB { get { return GetPar(@"data\Chemicals\Database.json"); } set { SetPar(value); } }
-        public static string ChemicalTemplates { get { return GetPar(@"data\Chemicals\Templates"); } set { SetPar(value); } }
-        public static string ChemicalSymbols { get { return GetPar(@"data\Chemicals\Symbols"); } set { SetPar(value); } }
-
+        public string DataFolder { get { return GetPar(DefaultDataFolder); } set { SetPar(value); } }
+        public string PartsDatabaseFile { get { return GetPar(Path.Combine(DataFolder, "Parts.json")); } set { SetPar(value); } }
+        public string PartDescriptorsDatabaseFile { get { return GetPar(Path.Combine(DataFolder, "Descriptors.json")); } set { SetPar(value); } }
     }
 
 
