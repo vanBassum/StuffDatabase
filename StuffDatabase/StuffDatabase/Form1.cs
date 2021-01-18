@@ -31,9 +31,7 @@ namespace StuffDatabase
             AddMenuItem(menuStrip1, "File/Save", () => { Save(); });
             AddMenuItem(menuStrip1, "File/Import", () => { });
             AddMenuItem(menuStrip1, "File/Export", () => { });
-
             AddMenuItem(menuStrip1, "Tools/Components", () => { EditComponents(); });
-
             AddMenuItem(menuStrip1, "Help", () => { });
 
         }
@@ -42,7 +40,11 @@ namespace StuffDatabase
         {
             this.Text = $"{Application.ProductName} V{Assembly.GetExecutingAssembly().GetName().Version.ToString(3)}";
             parts = new SaveableBindingList<Part>(Settings.Items.PartsDatabaseFile);
-            descriptors = new SaveableBindingList<Descriptor>(Settings.Items.PartDescriptorsDatabaseFile);
+            descriptors = new SaveableBindingList<Descriptor>(Settings.Items.PartDescriptorsDatabaseFile, false);
+            Part.Descriptors = descriptors;
+            Descriptor.Descriptors = descriptors;
+            DescriptorListStringConverter.Objects = descriptors;
+            descriptors.Load();
             descriptors.ListChanged += Descriptors_ListChanged;
             Descriptors_ListChanged(descriptors, new ListChangedEventArgs(ListChangedType.Reset, -1));
 
@@ -104,7 +106,7 @@ namespace StuffDatabase
                             tabPage.Tag = ctrl;
                             ctrl.Descriptor = descriptor;
                             ctrl.Dock = DockStyle.Fill;
-                            ctrl.DataSource = new FilteredBindingList<Part>(parts) { Filter = new Predicate<Part>(a => a.Descriptor.Name == descriptor.Name) };
+                            ctrl.DataSource = new FilteredBindingList<Part>(parts) { Filter = new Predicate<Part>(a => a.GetDescriptor().ID == descriptor.ID) };
                             ctrl.ObjectChanged += EditDialog_ObjectChanged;
                             tabPage.Controls.Add(ctrl);
                             tabControl1.TabPages.Add(tabPage);
@@ -176,8 +178,8 @@ namespace StuffDatabase
         void EditComponents()
         {
             CollectionEditDialog diag = new CollectionEditDialog();
-            DescriptorListStringConverter.Objects = descriptors;
             diag.DataSource = descriptors;
+            diag.CreateObject = () => Descriptor.Create();
             diag.ShowDialog();
             changePending = true;
         }

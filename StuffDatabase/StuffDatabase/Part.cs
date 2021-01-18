@@ -3,6 +3,7 @@ using STDLib.Misc;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
@@ -13,17 +14,15 @@ namespace StuffDatabase
     public class Part : PGA//DictionaryPropertyGridAdapter
     {
         [JsonIgnore]
+        [Category("Always")]
         public string Name  { get { return GetPar<string>(""); } set { SetPar(value); } }
-
 
         public static Part Create(Descriptor descriptor)
         {
             Part part = new Part();
-            part.Descriptor = descriptor;
+            part.SetDescriptor(descriptor);
             return part;
         }
-
-        
 
         public override string ToString()
         {
@@ -42,52 +41,35 @@ namespace StuffDatabase
         [JsonProperty("Fields")]
         private readonly Dictionary<string, object> Fields = new Dictionary<string, object>();
 
-        int DescriptorID { get; set; } = -1;
-
-
-
-        Descriptor _Descriptor;
+        [JsonIgnore]
+        public static BindingList<Descriptor> Descriptors { get; set; }
 
         [Browsable(false)]
-        public Descriptor Descriptor { get => _Descriptor; 
-            set 
-            {
-                if(_Descriptor != null)
-                    _Descriptor.PropertyChanged -= _Descriptor_PropertyChanged;
-                _Descriptor = value;
-                _Descriptor.PropertyChanged += _Descriptor_PropertyChanged; 
-                PopulateFields(); 
-            } 
-        }
-
-        private void _Descriptor_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            PopulateFields();
-        }
-
-        void PopulateFields()
-        {
-            /*
-            Descriptor descriptor = Descriptor;
-
-            while (descriptor != null)
-            {
-                foreach (var p in descriptor.Properties)
-                {
-                    if (!Fields.ContainsKey(p.PropertyName))
-                        Fields[p.PropertyName] = Activator.CreateInstance(p.GetSystemType());
-                }
-                descriptor = descriptor.Inherits;
-            }
-            */
-        }
+        [JsonProperty("DescriptorID")]
+        int DescriptorID { get; set; } = -1;
 
 
         public PGA()
         {
-            if(Descriptor != null)
-                Descriptor.PropertyChanged += _Descriptor_PropertyChanged;
+
         }
+
+
+
+        public void SetDescriptor(Descriptor descriptor)
+        {
+            DescriptorID = descriptor.ID;
+        }
+
+        public Descriptor GetDescriptor()
+        {
+            return Descriptors.FirstOrDefault(a => a.ID == DescriptorID);
+        }
+
+
+       
+
+
 
         protected void SetPar<T>(T value, [CallerMemberName] string propertyName = null)
         {
@@ -174,28 +156,55 @@ namespace StuffDatabase
                 }
 
                 PD pd = new PD(pi.Name, attributes, pi.PropertyType);
+
+                CategoryAttribute cat = null;
+                if ((cat = pi.GetCustomAttribute<CategoryAttribute>()) != null)
+                {
+                    pd.SetCategory(cat.Category);
+                }
+
+
                 pd.Getter = () => pi.GetValue(this);
                 pd.Setter = (a) => SetPar(a, pi.Name);
                 descriptors.Add(pd);
 
             }
 
-            Descriptor descriptor = Descriptor;
+            LoopDescriptors(descriptors, attributes);
 
-            while(descriptor != null)
+            return new PropertyDescriptorCollection(descriptors.ToArray());
+
+        }
+
+
+        void LoopDescriptors(List<PropertyDescriptor> collection, Attribute[] attributes)
+        {
+            Descriptor descriptor = GetDescriptor();
+
+            while (descriptor != null)
             {
                 foreach (var p in descriptor.Properties)
                 {
-                    PD pd = new PD(p.PropertyName, attributes, p.GetSystemType());
-                    pd.Getter = () => GetPar<object>(null, p.PropertyName);//{ return Fields.ContainsKey(p.PropertyName) ? Fields[p.PropertyName] : null; };
-                    pd.Setter = (a) => SetPar(a, p.PropertyName);
-                    descriptors.Add(pd);
+                    if (p.PropertyName != null)
+                    {
+                        if (!collection.Any(a => a.Name == p.PropertyName))
+                        {
+                            PD pd = new PD(p.PropertyName, attributes, p.GetSystemType());
+                            pd.SetCategory(descriptor.Name);
+                            pd.Getter = () => GetPar<object>(null, p.PropertyName);//{ return Fields.ContainsKey(p.PropertyName) ? Fields[p.PropertyName] : null; };
+                            pd.Setter = (a) => SetPar(a, p.PropertyName);
+                            collection.Add(pd);
+                        }
+                    }
                 }
+
                 descriptor = descriptor.Inherits;
             }
-            return new PropertyDescriptorCollection(descriptors.ToArray());
         }
     }
+
+
+
 
     public class PD : PropertyDescriptor
     {
@@ -208,6 +217,14 @@ namespace StuffDatabase
         public override bool IsReadOnly => false;
 
         public override Type PropertyType => type;
+
+        string _Category = null;
+        public override string Category { get { return _Category; } }
+
+        public void SetCategory(string cat)
+        {
+            _Category = cat;
+        }
 
         public PD(string name, Attribute[] attributes, Type type) : base(name, attributes)
         {
