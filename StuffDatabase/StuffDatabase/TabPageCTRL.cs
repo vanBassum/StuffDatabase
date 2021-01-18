@@ -21,7 +21,7 @@ namespace StuffDatabase
             { 
                 _DataSource = value; 
                 collectionEditControl1.DataSource = _DataSource;
-                Draw();
+                Render();
             } }
 
         Descriptor _Descriptor;
@@ -39,7 +39,7 @@ namespace StuffDatabase
                 if (comboBox1.Items.Count > 0)
                 {
                     comboBox1.SelectedIndex = 0;
-                    Draw();
+                    Render();
                 }
             } }
 
@@ -50,15 +50,13 @@ namespace StuffDatabase
 
         private void TabPageCTRL_Load(object sender, EventArgs e)
         {
-            collectionEditControl1.DisplayMember = nameof(Part.Name);
             collectionEditControl1.ObjectChanged += CollectionEditControl1_ObjectChanged;
-            collectionEditControl1.SelectedItemChanged += (a,b) => Draw();
-            comboBox1.SelectedIndexChanged += (a, b) => Draw();
+            collectionEditControl1.SelectedItemChanged += (a,b) => Render();
+            comboBox1.SelectedIndexChanged += (a, b) => Render();
         }
 
-        void Draw()
+        void Render()
         {
-
             if(collectionEditControl1.SelectedObject is Part part && comboBox1.SelectedItem is Template template)
             {
                 pictureBox1.Image = Dymo.Render(template, part);
@@ -68,7 +66,7 @@ namespace StuffDatabase
 
         private void CollectionEditControl1_ObjectChanged(object sender, object e)
         {
-            Draw();
+            Render();
             ObjectChanged(this, e);
         }
 

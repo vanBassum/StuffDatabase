@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using DYMO.Label.Framework;
 using FRMLib;
-using FRMLib.Controls;
 using STDLib.Misc;
 using STDLib.Saveable;
 
@@ -46,7 +45,6 @@ namespace StuffDatabase
             descriptors = new SaveableBindingList<Descriptor>(Settings.Items.PartDescriptorsDatabaseFile);
             descriptors.ListChanged += Descriptors_ListChanged;
             Descriptors_ListChanged(descriptors, new ListChangedEventArgs(ListChangedType.Reset, -1));
-
 
             //TODO check for missing descriptors!
         }
@@ -98,7 +96,7 @@ namespace StuffDatabase
                     tabControl1.TabPages.Clear();
                     if(sender is SaveableBindingList<Descriptor> list)
                     {
-                        foreach (Descriptor descriptor in list)
+                        foreach (Descriptor descriptor in list.Where(a=>a.UseAsComponent))
                         {
                             TabPage tabPage = new TabPage(descriptor.Name);
                             TabPageCTRL ctrl = new TabPageCTRL();
@@ -115,6 +113,9 @@ namespace StuffDatabase
                     break;
             }
         }
+
+
+
 
         private void EditDialog_ObjectChanged(object sender, object e)
         {

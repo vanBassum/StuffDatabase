@@ -1,4 +1,5 @@
-﻿using System;
+﻿using STDLib.Misc;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -6,17 +7,37 @@ using System.Linq;
 
 namespace StuffDatabase
 {
-    public class Descriptor
+    public class Descriptor : PropertySensitive
     {
-        public string Name { get; set; } = "New component type";
+        public static HashSet<int> ids = new HashSet<int>();
+
+        public int ID { get; }
+        public string Name { get => GetPar<string>("New type"); set => SetPar(value); }
 
         [TypeConverter(typeof(DescriptorListStringConverter))]
-        public Descriptor Inherits { get; set; } = null;
-        public List<DynamicProperty> Properties { get; set; } = new List<DynamicProperty>();
+        public Descriptor Inherits { get => GetPar<Descriptor>(null);  set => SetPar(value);  }
+        public bool UseAsComponent { get => GetPar<bool>(true); set => SetPar(value); }
+        public BindingList<DynamicProperty> Properties { get; } = new BindingList<DynamicProperty>();
 
         public Descriptor()
         {
+            int id = 0;
+            while (ids.Contains(id))
+                id++;
+            ID = id;
+            ids.Add(id);
 
+            Properties.ListChanged += Properties_ListChanged;
+        }
+
+        private void Properties_ListChanged(object sender, ListChangedEventArgs e)
+        {
+            InvokePropertyChanged(new PropertyChangedEventArgs(nameof(Properties)));
+            /*
+            switch(e.ListChangedType)
+            {
+                case ListChangedType.
+            }*/
         }
 
         public override string ToString()

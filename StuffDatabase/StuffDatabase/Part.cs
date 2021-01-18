@@ -15,17 +15,11 @@ namespace StuffDatabase
         [JsonIgnore]
         public string Name  { get { return GetPar<string>(""); } set { SetPar(value); } }
 
+
         public static Part Create(Descriptor descriptor)
         {
             Part part = new Part();
             part.Descriptor = descriptor;
-            foreach(var property in descriptor.Properties)
-            {
-
-                //part.Fields.Add(property.PropertyName, Activator.CreateInstance(property.GetSystemType()));
-            }
-
-            
             return part;
         }
 
@@ -48,12 +42,51 @@ namespace StuffDatabase
         [JsonProperty("Fields")]
         private readonly Dictionary<string, object> Fields = new Dictionary<string, object>();
 
+        int DescriptorID { get; set; } = -1;
+
+
+
+        Descriptor _Descriptor;
+
         [Browsable(false)]
-        public Descriptor Descriptor { get; set; }
+        public Descriptor Descriptor { get => _Descriptor; 
+            set 
+            {
+                if(_Descriptor != null)
+                    _Descriptor.PropertyChanged -= _Descriptor_PropertyChanged;
+                _Descriptor = value;
+                _Descriptor.PropertyChanged += _Descriptor_PropertyChanged; 
+                PopulateFields(); 
+            } 
+        }
+
+        private void _Descriptor_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            PopulateFields();
+        }
+
+        void PopulateFields()
+        {
+            /*
+            Descriptor descriptor = Descriptor;
+
+            while (descriptor != null)
+            {
+                foreach (var p in descriptor.Properties)
+                {
+                    if (!Fields.ContainsKey(p.PropertyName))
+                        Fields[p.PropertyName] = Activator.CreateInstance(p.GetSystemType());
+                }
+                descriptor = descriptor.Inherits;
+            }
+            */
+        }
+
 
         public PGA()
         {
-            
+            if(Descriptor != null)
+                Descriptor.PropertyChanged += _Descriptor_PropertyChanged;
         }
 
         protected void SetPar<T>(T value, [CallerMemberName] string propertyName = null)
