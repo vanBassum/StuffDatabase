@@ -16,8 +16,8 @@ namespace StuffDatabase
     {
         public event EventHandler<object> ObjectChanged;
 
-        FilteredBindingList<Part> _DataSource;
-        public FilteredBindingList<Part> DataSource { get => _DataSource; set 
+        IBindingList _DataSource;
+        public IBindingList DataSource { get => _DataSource; set 
             { 
                 _DataSource = value; 
                 collectionEditControl1.DataSource = _DataSource;
@@ -43,7 +43,10 @@ namespace StuffDatabase
                 }
             } }
 
-
+        public void test()
+        {
+            collectionEditControl1.test();
+        }
         public TabPageCTRL()
         {
             InitializeComponent();

@@ -87,7 +87,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PartList.cs" />
+    <Compile Include="DictionaryPropertyDescriptor.cs" />
+    <Compile Include="DictionaryPropertyGridAdapter.cs" />
+    <Compile Include="DynamicProperty.cs" />
     <Compile Include="Descriptor.cs" />
     <Compile Include="Dymo.cs" />
     <Compile Include="Part.cs" />

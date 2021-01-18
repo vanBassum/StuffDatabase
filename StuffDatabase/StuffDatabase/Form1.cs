@@ -19,8 +19,8 @@ namespace StuffDatabase
     public partial class Form1 : Form
     {
         bool changePending = false;
-        SaveableBindingList <Descriptor> descriptors;
-        PartList parts;
+        SaveableBindingList<Descriptor> descriptors;
+        SaveableBindingList<Part> parts;
 
 
         public Form1()
@@ -32,15 +32,18 @@ namespace StuffDatabase
         private void Form1_Load(object sender, EventArgs e)
         {
             this.Text = $"{Application.ProductName} V{Assembly.GetExecutingAssembly().GetName().Version.ToString(3)}";
-            parts = new PartList(Settings.Items.PartsDatabaseFile);
+            parts = new SaveableBindingList<Part>(Settings.Items.PartsDatabaseFile);
             descriptors = new SaveableBindingList<Descriptor>(Settings.Items.PartDescriptorsDatabaseFile);
             descriptors.ListChanged += Descriptors_ListChanged;
             Descriptors_ListChanged(descriptors, new ListChangedEventArgs(ListChangedType.Reset, -1));
 
+
             //TODO check for missing descriptors!
         }
 
-        
+
+        TabPageCTRL ctrll;
+
         private void Descriptors_ListChanged(object sender, ListChangedEventArgs e)
         {
             switch (e.ListChangedType)
@@ -53,6 +56,7 @@ namespace StuffDatabase
                         {
                             TabPage tabPage = new TabPage(descriptor.Name);
                             TabPageCTRL ctrl = new TabPageCTRL();
+                            ctrll = ctrl;
                             tabPage.Tag = ctrl;
                             ctrl.Descriptor = descriptor;
                             ctrl.Dock = DockStyle.Fill;
@@ -112,7 +116,7 @@ namespace StuffDatabase
 
             if(tabControl1.SelectedTab.Tag is TabPageCTRL ctrl)
             {
-                ctrl.DataSource.Filter = (a) => a.Descriptor.Name == ctrl.Descriptor.Name && a.Name.Contains(tb.Text);
+                //ctrl.DataSource.Filter = (a) => a.Descriptor.Name == ctrl.Descriptor.Name && a.Name.Contains(tb.Text);
             }
         }
 
@@ -131,8 +135,19 @@ namespace StuffDatabase
             changePending = true;
         }
 
-        
+        private void testToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            BindingList<Part> list = new BindingList<Part>();
 
+            list.Add(new Part() { Name = "test1" } );
+            list.Add(new Part() { Name = "test2" } );
+
+            ctrll.DataSource = list;
+
+
+            ctrll.test();
+                
+        }
     }
 
 }

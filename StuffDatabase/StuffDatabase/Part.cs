@@ -5,184 +5,205 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 
 namespace StuffDatabase
 {
-    public class Part : PropertySensitive
-    {
-        [Browsable(false)]
-        public Descriptor Descriptor { get; set; }
 
-        public string Name { get { return GetPar<string>(""); } set { SetPar(value); } }
+    public class Part : PGA//DictionaryPropertyGridAdapter
+    {
+        //[JsonIgnore]
+        public string Name  { get { return GetPar<string>(""); } set { SetPar(value); } }
+
+        public static Part Create(Descriptor descriptor)
+        {
+            Part part = new Part();
+            part.Descriptor = descriptor;
+            foreach(var property in descriptor.Properties)
+            {
+
+                //part.Fields.Add(property.PropertyName, Activator.CreateInstance(property.GetSystemType()));
+            }
+
+            
+            return part;
+        }
+
+        
 
         public override string ToString()
         {
             return Name;
         }
-
-        public static Part Create(Descriptor descriptor)
-        {
-            var factory = new DynamicTypeFactory();
-            var extendedType = factory.CreateNewTypeWithDynamicProperties(typeof(Part), descriptor.Properties);
-            Part p = Activator.CreateInstance(extendedType) as Part;
-            p.Descriptor = descriptor;
-            return p;
-        }
-
-        public static Part Create(Descriptor descriptor, Part example)
-        {
-            var factory = new DynamicTypeFactory();
-            var extendedType = factory.CreateNewTypeWithDynamicProperties(typeof(Part), descriptor.Properties);
-            Part p = Activator.CreateInstance(extendedType) as Part;
-            p.Descriptor = descriptor;
-            foreach (PropertyInfo pi in example.GetType().GetProperties())
-            {
-                object o = pi.GetValue(example);
-                pi.SetValue(p, o);
-            }
-            return p;
-        }
-
-        public static Type GetType(Descriptor descriptor)
-        {
-            var factory = new DynamicTypeFactory();
-            return factory.CreateNewTypeWithDynamicProperties(typeof(Part), descriptor.Properties);
-        }
     }
 
 
-    /// <summary>
-    /// Represents the definition of a dynamic property which can be added to an object at runtime.
-    /// </summary>
-    public class DynamicProperty
+
+
+
+    public class PGA : ICustomTypeDescriptor, INotifyPropertyChanged
     {
-        public string PropertyName { get; set; }
-        public Types Type { get; set; }
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        public Type GetSystemType()
+        [JsonProperty("Fields")]
+        private readonly Dictionary<string, object> Fields = new Dictionary<string, object>();
+
+        [Browsable(false)]
+        public Descriptor Descriptor { get; set; }
+
+        public PGA()
         {
-            switch (Type)
+            
+        }
+
+        protected void SetPar<T>(T value, [CallerMemberName] string propertyName = null)
+        {
+            Fields[propertyName] = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        protected T GetPar<T>(T defVal = default(T), [CallerMemberName] string propertyName = null)
+        {
+            if (!Fields.ContainsKey(propertyName))
+                Fields[propertyName] = defVal;
+            return (T)Fields[propertyName];
+        }
+
+
+        public string GetComponentName()
+        {
+            return TypeDescriptor.GetComponentName(this, true);
+        }
+
+        public EventDescriptor GetDefaultEvent()
+        {
+            return TypeDescriptor.GetDefaultEvent(this, true);
+        }
+
+        public string GetClassName()
+        {
+            return TypeDescriptor.GetClassName(this, true);
+        }
+
+        public EventDescriptorCollection GetEvents(Attribute[] attributes)
+        {
+            return TypeDescriptor.GetEvents(this, attributes, true);
+        }
+
+        EventDescriptorCollection System.ComponentModel.ICustomTypeDescriptor.GetEvents()
+        {
+            return TypeDescriptor.GetEvents(this, true);
+        }
+
+        public TypeConverter GetConverter()
+        {
+            return TypeDescriptor.GetConverter(this, true);
+        }
+
+        public object GetPropertyOwner(PropertyDescriptor pd)
+        {
+            return this;
+        }
+
+        public AttributeCollection GetAttributes()
+        {
+            return TypeDescriptor.GetAttributes(this, true);
+        }
+
+        public object GetEditor(Type editorBaseType)
+        {
+            return TypeDescriptor.GetEditor(this, editorBaseType, true);
+        }
+
+        public PropertyDescriptor GetDefaultProperty()
+        {
+            return null;
+        }
+
+        public PropertyDescriptorCollection GetProperties()
+        {
+            throw new NotImplementedException();
+        }
+
+        public PropertyDescriptorCollection GetProperties(Attribute[] attributes)
+        {
+
+            List<PropertyDescriptor> descriptors = new List<PropertyDescriptor>();
+
+            foreach (var pi in this.GetType().GetProperties())
             {
-                case Types.STRING: return typeof(string);
-                case Types.DOUBLE: return typeof(double);
+                BrowsableAttribute browsable = null;
+
+                if ((browsable = pi.GetCustomAttribute<BrowsableAttribute>()) != null)
+                {
+                    if (!browsable.Browsable)
+                        continue;
+                }
+
+                PD pd = new PD(pi.Name, attributes, pi.PropertyType);
+                pd.Getter = () => pi.GetValue(this);
+                pd.Setter = (a) => SetPar(a, pi.Name);
+                descriptors.Add(pd);
+
             }
-            throw new Exception("Unknown type");
-        }
 
-        public enum Types
-        {
-            STRING,
-            DOUBLE,
+            foreach (var p in Descriptor.Properties)
+            {
+                PD pd = new PD(p.PropertyName, attributes, p.GetSystemType());
+                pd.Getter = () => GetPar<object>(null, p.PropertyName);//{ return Fields.ContainsKey(p.PropertyName) ? Fields[p.PropertyName] : null; };
+                pd.Setter = (a) => SetPar(a, p.PropertyName);
+                descriptors.Add(pd);
+            }
+
+
+            return new PropertyDescriptorCollection(descriptors.ToArray());
         }
     }
 
-    /// <summary>
-    /// Generates new Types with dynamically added properties.
-    /// </summary>
-    public class DynamicTypeFactory
+    public class PD : PropertyDescriptor
     {
-        #region Fields
+        Type type;
+        public Action<object> Setter;
+        public Func<object> Getter;
 
-        private TypeBuilder _typeBuilder;
+        public override Type ComponentType => throw new NotImplementedException();
 
-        #endregion
+        public override bool IsReadOnly => false;
 
-        #region Readonlys
+        public override Type PropertyType => type;
 
-        private readonly AssemblyBuilder _assemblyBuilder;
-        private readonly ModuleBuilder _moduleBuilder;
-
-        #endregion
-
-        #region Constructor
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public DynamicTypeFactory()
+        public PD(string name, Attribute[] attributes, Type type) : base(name, attributes)
         {
-            var uniqueIdentifier = Guid.NewGuid().ToString();
-            var assemblyName = new AssemblyName(uniqueIdentifier);
-
-            _assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.RunAndCollect);
-            _moduleBuilder = _assemblyBuilder.DefineDynamicModule(uniqueIdentifier);
+            this.type = type;
         }
 
-        #endregion
-
-        #region Methods
-
-        #region Public
-
-        /// <summary>
-        /// Creates a new Type based on the specified parent Type and attaches dynamic properties.
-        /// </summary>
-        /// <param name="parentType">The parent Type to base the new Type on</param>
-        /// <param name="dynamicProperties">The collection of dynamic properties to attach to the new Type</param>
-        /// <returns>An extended Type with dynamic properties added to it</returns>
-        public Type CreateNewTypeWithDynamicProperties(Type parentType, IEnumerable<DynamicProperty> dynamicProperties)
+        public override bool CanResetValue(object component)
         {
-            _typeBuilder = _moduleBuilder.DefineType(parentType.Name + Guid.NewGuid().ToString(), TypeAttributes.Public);
-            _typeBuilder.SetParent(parentType);
-
-            foreach (DynamicProperty property in dynamicProperties)
-                AddDynamicPropertyToType(property);
-
-            return _typeBuilder.CreateType();
-        }
-        #endregion
-
-        #region Private
-
-        /// <summary>
-        /// Adds the specified dynamic property to the new type.
-        /// </summary>
-        /// <param name="dynamicProperty">The definition of the dynamic property to add to the Type</param>
-        private void AddDynamicPropertyToType(DynamicProperty dynamicProperty)
-        {
-            Type propertyType = dynamicProperty.GetSystemType();
-            string propertyName = $"{dynamicProperty.PropertyName}";
-            string fieldName = $"_{propertyName}";
-
-            FieldBuilder fieldBuilder = _typeBuilder.DefineField(fieldName, propertyType, FieldAttributes.Private);
-
-            // The property set and get methods require a special set of attributes.
-            MethodAttributes getSetAttributes = MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig;
-
-            // Define the 'get' accessor method.
-            MethodBuilder getMethodBuilder = _typeBuilder.DefineMethod($"get_{propertyName}", getSetAttributes, propertyType, Type.EmptyTypes);
-            ILGenerator propertyGetGenerator = getMethodBuilder.GetILGenerator();
-            propertyGetGenerator.Emit(OpCodes.Ldarg_0);
-            propertyGetGenerator.Emit(OpCodes.Ldfld, fieldBuilder);
-            propertyGetGenerator.Emit(OpCodes.Ret);
-
-            // Define the 'set' accessor method.
-            MethodBuilder setMethodBuilder = _typeBuilder.DefineMethod($"set_{propertyName}", getSetAttributes, null, new Type[] { propertyType });
-            ILGenerator propertySetGenerator = setMethodBuilder.GetILGenerator();
-            propertySetGenerator.Emit(OpCodes.Ldarg_0);
-            propertySetGenerator.Emit(OpCodes.Ldarg_1);
-            propertySetGenerator.Emit(OpCodes.Stfld, fieldBuilder);
-            propertySetGenerator.Emit(OpCodes.Ret);
-
-            // Lastly, we must map the two methods created above to a PropertyBuilder and their corresponding behaviors, 'get' and 'set' respectively.
-            PropertyBuilder propertyBuilder = _typeBuilder.DefineProperty(propertyName, PropertyAttributes.HasDefault, propertyType, null);
-            propertyBuilder.SetGetMethod(getMethodBuilder);
-            propertyBuilder.SetSetMethod(setMethodBuilder);
-
-            // Add a 'DisplayName' attribute.
-            var attributeType = typeof(DisplayNameAttribute);
-            var attributeBuilder = new CustomAttributeBuilder(
-                attributeType.GetConstructor(new Type[] { typeof(string) }), // Constructor selection.
-                new object[] { dynamicProperty.PropertyName }, // Constructor arguments.
-                new PropertyInfo[] { }, // Properties to assign to.                    
-                new object[] { } // Values for property assignment.
-                );
-            propertyBuilder.SetCustomAttribute(attributeBuilder);
+            return false;
         }
 
-        #endregion
+        public override object GetValue(object component)
+        {
+            return Getter();
+        }
 
-        #endregion
+        public override void ResetValue(object component)
+        {
+            throw new NotImplementedException();
+        }
 
+        public override void SetValue(object component, object value)
+        {
+            Setter(value);
+        }
+
+        public override bool ShouldSerializeValue(object component)
+        {
+            return false;
+        }
     }
+
+
+
+
 }
