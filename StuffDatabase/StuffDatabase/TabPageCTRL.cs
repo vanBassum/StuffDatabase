@@ -43,10 +43,6 @@ namespace StuffDatabase
                 }
             } }
 
-        public void test()
-        {
-            collectionEditControl1.test();
-        }
         public TabPageCTRL()
         {
             InitializeComponent();

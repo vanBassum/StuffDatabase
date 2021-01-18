@@ -26,7 +26,17 @@ namespace StuffDatabase
         public Form1()
         {
             Settings.Load();
+            
             InitializeComponent();
+
+            AddMenuItem(menuStrip1, "File/Save", () => { Save(); });
+            AddMenuItem(menuStrip1, "File/Import", () => { });
+            AddMenuItem(menuStrip1, "File/Export", () => { });
+
+            AddMenuItem(menuStrip1, "Tools/Components", () => { EditComponents(); });
+
+            AddMenuItem(menuStrip1, "Help", () => { });
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -41,6 +51,42 @@ namespace StuffDatabase
             //TODO check for missing descriptors!
         }
 
+        void AddMenuItem(ToolStrip menu, string menuPath, Action action)
+        {
+            string[] split = menuPath.Split('/');
+
+            ToolStripMenuItem item = null;
+
+            if (menu.Items[split[0]] is ToolStripMenuItem tsi)
+                item = tsi;
+            else
+            {
+                item = new ToolStripMenuItem(split[0]);
+                item.Name = split[0];
+                menu.Items.Add(item);
+            }
+
+            for (int i = 1; i < split.Length; i++)
+            {
+                string name = split[i];
+
+                if (item.DropDownItems[name] is ToolStripMenuItem tsii)
+                    item = tsii;
+                else
+                {
+                    ToolStripMenuItem newItem = new ToolStripMenuItem(name);
+                    newItem.Name = name;
+                    item.DropDownItems.Add(newItem);
+                    item = newItem;
+                }
+
+            }
+
+            if (action != null)
+                item.Click += (a, b) => action.Invoke();
+
+
+        }
 
         TabPageCTRL ctrll;
 
@@ -82,9 +128,7 @@ namespace StuffDatabase
             {
                 if (MessageBox.Show("Do you want to save changes?", Application.ProductName, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    descriptors.Save();
-                    parts.Save();
-                    Settings.Save();
+                    Save();
                 }
                 changePending = false;
             }
@@ -120,19 +164,32 @@ namespace StuffDatabase
             }
         }
 
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+
+        void Save()
         {
             parts.Save();
             descriptors.Save();
             Settings.Save();
         }
 
-        private void componentsToolStripMenuItem_Click(object sender, EventArgs e)
+        void EditComponents()
         {
             CollectionEditDialog diag = new CollectionEditDialog();
+            DescriptorListStringConverter.Objects = descriptors;
             diag.DataSource = descriptors;
             diag.ShowDialog();
             changePending = true;
+        }
+
+        /*
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void componentsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
         }
 
         private void testToolStripMenuItem_Click(object sender, EventArgs e)
@@ -142,12 +199,9 @@ namespace StuffDatabase
             list.Add(new Part() { Name = "test1" } );
             list.Add(new Part() { Name = "test2" } );
 
-            ctrll.DataSource = list;
-
-
-            ctrll.test();
-                
+            ctrll.DataSource = list;    
         }
+        */
     }
 
 }

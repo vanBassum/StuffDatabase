@@ -12,7 +12,7 @@ namespace StuffDatabase
 
     public class Part : PGA//DictionaryPropertyGridAdapter
     {
-        //[JsonIgnore]
+        [JsonIgnore]
         public string Name  { get { return GetPar<string>(""); } set { SetPar(value); } }
 
         public static Part Create(Descriptor descriptor)
@@ -147,15 +147,19 @@ namespace StuffDatabase
 
             }
 
-            foreach (var p in Descriptor.Properties)
+            Descriptor descriptor = Descriptor;
+
+            while(descriptor != null)
             {
-                PD pd = new PD(p.PropertyName, attributes, p.GetSystemType());
-                pd.Getter = () => GetPar<object>(null, p.PropertyName);//{ return Fields.ContainsKey(p.PropertyName) ? Fields[p.PropertyName] : null; };
-                pd.Setter = (a) => SetPar(a, p.PropertyName);
-                descriptors.Add(pd);
+                foreach (var p in descriptor.Properties)
+                {
+                    PD pd = new PD(p.PropertyName, attributes, p.GetSystemType());
+                    pd.Getter = () => GetPar<object>(null, p.PropertyName);//{ return Fields.ContainsKey(p.PropertyName) ? Fields[p.PropertyName] : null; };
+                    pd.Setter = (a) => SetPar(a, p.PropertyName);
+                    descriptors.Add(pd);
+                }
+                descriptor = descriptor.Inherits;
             }
-
-
             return new PropertyDescriptorCollection(descriptors.ToArray());
         }
     }
