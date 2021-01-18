@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using DYMO.Label.Framework;
 using STDLib.Saveable;
+using STDLib.Serializers;
 using StuffDatabase.Components;
 
 namespace StuffDatabase
@@ -21,6 +22,11 @@ namespace StuffDatabase
 
         public Form1()
         {
+            Settings.Serializer.Settings.TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Objects;
+            Settings.Serializer.Settings.TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Simple;
+            Settings.Serializer.Settings.ObjectCreationHandling = Newtonsoft.Json.ObjectCreationHandling.Replace;         //https://stackoverflow.com/questions/13394401/json-net-deserializing-list-gives-duplicate-items
+
+
             Settings.Load();
             InitializeComponent();
         }
@@ -28,7 +34,14 @@ namespace StuffDatabase
         private void Form1_Load(object sender, EventArgs e)
         {
             this.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            componentDB = new SaveableBindingList<BaseComponent>(Settings.ComponentDB);
+
+
+            JSON serializer = new JSON();
+            serializer.Settings.TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Objects;
+            serializer.Settings.TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Simple;
+            serializer.Settings.ObjectCreationHandling = Newtonsoft.Json.ObjectCreationHandling.Replace;         //https://stackoverflow.com/questions/13394401/json-net-deserializing-list-gives-duplicate-items
+
+            componentDB = new SaveableBindingList<BaseComponent>(serializer, Settings.ComponentDB);
 
             foreach (Type compType in FindSubClassesOf<BaseComponent>())
             {

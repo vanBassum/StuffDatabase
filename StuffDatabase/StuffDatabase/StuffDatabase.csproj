@@ -91,6 +91,7 @@
     <Compile Include="Components\BaseComponent.cs" />
     <Compile Include="Components\Capacitor.cs" />
     <Compile Include="Components\FET.cs" />
+    <Compile Include="Components\GenericIC.cs" />
     <Compile Include="Components\Opamp.cs" />
     <Compile Include="Components\Resistor.cs" />
     <Compile Include="Components\Transistor.cs" />

@@ -77,7 +77,7 @@ namespace StuffDatabase
                     expanedNodes.Add(nt.Text);
 
             treeView1.Nodes.Clear();
-            foreach (BaseComponent component in Components)
+            foreach (BaseComponent component in Components.OrderBy(a=>a.Name))
             {
                 if (Filter(component))
                     AddNode(component);
@@ -203,9 +203,14 @@ namespace StuffDatabase
         private void btn_Delete_Click(object sender, EventArgs e)
         {
             BaseComponent selectedComponent = GetSelectedComponent();
-            if (selectedComponent != null)
+            DialogResult dialogResult = MessageBox.Show($"This action will delete:\r\n'{selectedComponent.Function}'\r\n'{selectedComponent.Name}'\r\n\r\nAre you sure?", "Delete", MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes)
             {
-                Components.Remove(selectedComponent);
+                
+                if (selectedComponent != null)
+                {
+                    Components.Remove(selectedComponent);
+                }
             }
         }
 

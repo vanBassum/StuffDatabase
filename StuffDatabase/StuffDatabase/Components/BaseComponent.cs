@@ -13,6 +13,8 @@ namespace StuffDatabase.Components
         [Category("Base")]
         public string Name { get { return GetPar("new Component"); } set { SetPar(value); MaxNameLength = Math.Max(MaxNameLength, value.Length); } }
         [Category("Base")]
+        public string BoxID { get { return GetPar("Storage container 1"); } set { SetPar(value); } }
+        [Category("Base")]
         public string Function { get { return GetPar("new Function"); } set { SetPar(value); } }
         [Editor(typeof(MultiLineTextEditor), typeof(UITypeEditor))]
         [Category("Base")]
