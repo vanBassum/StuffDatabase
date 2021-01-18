@@ -33,7 +33,7 @@ namespace StuffDatabase
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            this.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            this.Text = $"Component database V{Assembly.GetExecutingAssembly().GetName().Version.ToString(3)}";
 
 
             JSON serializer = new JSON();
