@@ -1,0 +1,16 @@
+C:\WSHome\StuffDatabase\StuffDatabase\obj\Debug\StuffDatabase.csprojAssemblyReference.cache
+C:\WSHome\StuffDatabase\StuffDatabase\obj\Debug\StuffDatabase.Form1.resources
+C:\WSHome\StuffDatabase\StuffDatabase\obj\Debug\StuffDatabase.Properties.Resources.resources
+C:\WSHome\StuffDatabase\StuffDatabase\obj\Debug\StuffDatabase.csproj.GenerateResource.cache
+C:\WSHome\StuffDatabase\StuffDatabase\obj\Debug\StuffDatabase.csproj.CoreCompileInputs.cache
+C:\WSHome\StuffDatabase\StuffDatabase\bin\Debug\StuffDatabase.exe.config
+C:\WSHome\StuffDatabase\StuffDatabase\bin\Debug\StuffDatabase.exe
+C:\WSHome\StuffDatabase\StuffDatabase\bin\Debug\StuffDatabase.pdb
+C:\WSHome\StuffDatabase\StuffDatabase\bin\Debug\STDLib.dll
+C:\WSHome\StuffDatabase\StuffDatabase\bin\Debug\STDLib.pdb
+C:\WSHome\StuffDatabase\StuffDatabase\bin\Debug\STDLib.xml
+C:\WSHome\StuffDatabase\StuffDatabase\obj\Debug\StuffDatabase.csproj.CopyComplete
+C:\WSHome\StuffDatabase\StuffDatabase\obj\Debug\StuffDatabase.exe
+C:\WSHome\StuffDatabase\StuffDatabase\obj\Debug\StuffDatabase.pdb
+C:\WSHome\StuffDatabase\StuffDatabase\bin\Debug\Newtonsoft.Json.dll
+C:\WSHome\StuffDatabase\StuffDatabase\bin\Debug\Newtonsoft.Json.xml

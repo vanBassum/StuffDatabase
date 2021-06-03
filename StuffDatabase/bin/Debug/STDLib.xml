@@ -1,0 +1,207 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>STDLib</name>
+    </assembly>
+    <members>
+        <member name="E:STDLib.Ethernet.TcpSocketClient.OnDataRecieved">
+            <summary>
+            Fires when data is recieved by the socket.
+            </summary>
+        </member>
+        <member name="P:STDLib.Ethernet.TcpSocketClient.RemoteEndPoint">
+            <summary>
+            The IP endpoint of the client to witch the socket is connected.
+            </summary>
+        </member>
+        <member name="P:STDLib.Ethernet.TcpSocketClient.ConnectionStatus">
+            <summary>
+            Tells the current connection status.
+            </summary>
+        </member>
+        <member name="M:STDLib.Ethernet.TcpSocketClient.#ctor">
+            <summary>
+            Creates a new client.
+            </summary>
+        </member>
+        <member name="M:STDLib.Ethernet.TcpSocketClient.#ctor(System.Net.Sockets.Socket)">
+            <summary>
+            Creates a new client based upon an existing socket.
+            </summary>
+            <param name="s">The socket to be used by this client.</param>
+        </member>
+        <member name="M:STDLib.Ethernet.TcpSocketClient.Finalize">
+            <summary>
+            Destructor.
+            </summary>
+        </member>
+        <member name="M:STDLib.Ethernet.TcpSocketClient.Disconnect">
+            <summary>
+            Method to close the connection.
+            </summary>
+        </member>
+        <member name="M:STDLib.Ethernet.TcpSocketClient.SendDataSync(System.Byte[])">
+            <summary>
+            Method to send data.
+            </summary>
+            <param name="data">The data to be send</param>
+            <returns>Number of bytes that where send.</returns>
+        </member>
+        <member name="M:STDLib.Extentions.Array_Ext.SubArray``1(``0[],System.Int32,System.Int32)">
+            <summary>
+            Creates a copy of this array.
+            </summary>
+            <typeparam name="T">Type of items in array</typeparam>
+            <param name="data">The array to copy</param>
+            <param name="index">Start index</param>
+            <param name="length">Number of items to be copied</param>
+            <returns>A partial copy of the origional</returns>
+        </member>
+        <member name="M:STDLib.Extentions.Array_Ext.SubArray``1(``0[],System.Int32)">
+            <summary>
+            Creates a copy of this array.
+            </summary>
+            <typeparam name="T">Type of items in array</typeparam>
+            <param name="data">The array to copy</param>
+            <param name="index">Start index</param>
+            <returns>A partial copy of the origional</returns>
+        </member>
+        <member name="E:STDLib.JBVProtocol.Framing.OnFrameCollected">
+            <summary>
+            Fires when a complete frame has been recieved.
+            </summary>
+        </member>
+        <member name="M:STDLib.JBVProtocol.Framing.Unstuff(System.Byte[])">
+            <summary>
+            Method to destuff incomming data. 
+            When a frame is complete <see cref="E:STDLib.JBVProtocol.Framing.OnFrameCollected"/> will be fired.
+            </summary>
+            <param name="data">The stuffed data to unstuff</param>
+        </member>
+        <member name="M:STDLib.JBVProtocol.Framing.Stuff(STDLib.JBVProtocol.Frame)">
+            <summary>
+            Method to stuff a frame into raw data.
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="T:STDLib.Misc.Map`2">
+            <summary>
+            https://stackoverflow.com/questions/10966331/two-way-bidirectional-dictionary-in-c/10966684
+            </summary>
+            <typeparam name="T1"></typeparam>
+            <typeparam name="T2"></typeparam>
+        </member>
+        <member name="T:STDLib.Misc.PropertySensitive">
+            <summary>
+            A helperclass to help implement the INotifyPropertyChanged.
+            <code>
+            class Someclass : PropertySensitive
+            { 
+                public int SomeProp { get { return GetPar(5); } set { SetPar(value); } }
+            }
+            </code>
+            </summary>
+        </member>
+        <member name="E:STDLib.Misc.PropertySensitive.PropertyChanged">
+            <summary>
+            <see cref="E:System.ComponentModel.INotifyPropertyChanged.PropertyChanged"/>
+            </summary>
+        </member>
+        <member name="M:STDLib.Misc.PropertySensitive.SetPar``1(``0,System.String)">
+            <summary>
+            Use this in the setter of a property to set the value
+            <code>
+            public int SomeProp { set { SetPar(value); } }
+            </code>
+            </summary>
+            <typeparam name="T">Type of the property.</typeparam>
+            <param name="value">Value to witch the property will be set.</param>
+            <param name="propertyName">The name of the property.</param>
+        </member>
+        <member name="M:STDLib.Misc.PropertySensitive.GetPar``1(``0,System.String)">
+            <summary>
+            Use this in the getter of a property to retrieve the value.
+            <code>
+            public int SomeProp { get { return GetPar(5); }}
+            </code> 
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="defVal"></param>
+            <param name="propertyName"></param>
+            <returns></returns>
+        </member>
+        <member name="T:STDLib.Misc.ThreadsafeBindingList`1">
+            <summary>
+            Provides a thread-safe binding-list by using the synchronizationcontext where the list was created.
+            HACK: Probably not full-proof.  
+            Copied from: http://groups.google.co.uk/group/microsoft.public.dotnet.languages.csharp/msg/f12a3c5980567f06
+            List should be created in a forms control providing a synchronization context
+            More about synchronizationcontext here: http://www.codeproject.com/KB/cpp/SyncContextTutorial.aspx
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:STDLib.Misc.ThreadsafeBindingList`1.#ctor(System.Threading.SynchronizationContext)">
+            <summary>
+            Creates a bindinglist using the givin synchronization context
+            </summary>
+        </member>
+        <member name="T:STDLib.Saveable.BaseSettings`1">
+            <summary>
+            Used to create settings that are static and therefore accessable across the whole project.
+            </summary>
+            <typeparam name="T1">The type of the settings object.</typeparam>
+        </member>
+        <member name="P:STDLib.Saveable.BaseSettings`1.DataFolder">
+            <summary>
+            Depending on windows or linux.
+            </summary>
+        </member>
+        <member name="F:STDLib.Saveable.BaseSettings`1.SettingsFile">
+            <summary>
+            The file to store the settings to.
+            </summary>
+        </member>
+        <member name="M:STDLib.Saveable.BaseSettings`1.Save">
+            <summary>
+            Save the current state of the settings to <see cref="F:STDLib.Saveable.BaseSettings`1.SettingsFile"/>.
+            </summary>
+        </member>
+        <member name="M:STDLib.Saveable.BaseSettings`1.Load(System.Boolean)">
+            <summary>
+            Load the settings from a file.
+            </summary>
+            Save the current state of the settings to <see cref="F:STDLib.Saveable.BaseSettings`1.SettingsFile"/>.
+            <param name="createIfNotExist">When true, a new file with default values will be created  when the file doens't exist. Otherwise this will throw an exception if the file doensn't exist.</param>
+        </member>
+        <member name="M:STDLib.Saveable.BaseSettings`1.Save(System.IO.Stream)">
+            <summary>
+            Save the settings to a stream.
+            </summary>
+            <param name="stream"></param>
+        </member>
+        <member name="M:STDLib.Saveable.BaseSettings`1.Load(System.IO.Stream)">
+            <summary>
+            Load the settings from a stream.
+            </summary>
+            <param name="stream"></param>
+        </member>
+        <member name="M:STDLib.Saveable.BaseSettings`1.SetPar``1(``0,System.String)">
+            <summary>
+            Set the value of a property.
+            </summary>
+            <typeparam name="T2">Type of the property to set.</typeparam>
+            <param name="value">Value of the property to set.</param>
+            <param name="propertyName">The name of the property to set.</param>
+        </member>
+        <member name="M:STDLib.Saveable.BaseSettings`1.GetPar``1(``0,System.String)">
+            <summary>
+            Get the value of a property.
+            </summary>
+            <typeparam name="T2">Type of the property to get.</typeparam>
+            <param name="defVal">The default value to use if the property has no value.</param>
+            <param name="propertyName">The name of the property to get.</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
