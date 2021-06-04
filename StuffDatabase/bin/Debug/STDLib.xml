@@ -85,6 +85,15 @@
             <param name="data"></param>
             <returns></returns>
         </member>
+        <member name="M:STDLib.Math.RectangleD.Collides(STDLib.Math.RectangleD,STDLib.Math.RectangleD)">
+            <summary>
+            Checks weter 2 rectangles collide.
+            </summary>
+            https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
+            <param name="a"></param>
+            <param name="b"></param>
+            <returns></returns>
+        </member>
         <member name="T:STDLib.Misc.Map`2">
             <summary>
             https://stackoverflow.com/questions/10966331/two-way-bidirectional-dictionary-in-c/10966684
