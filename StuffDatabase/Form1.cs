@@ -43,6 +43,17 @@ namespace StuffDatabase
                 database.Items.Add(item);
             });
 
+
+            /*
+            PartType pt = new PartType { Name = "Tor" };
+            pt.Parameters.Add(new PartParameter { Name = "HFE", Type = typeof(int) });
+            database.Types.Add(pt);
+
+            PartItem pi = new PartItem("sometor", pt);
+            database.Items.Add(pi);
+
+            database.Save();
+            */
         }
 
 

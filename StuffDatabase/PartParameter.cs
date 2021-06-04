@@ -3,6 +3,7 @@ using System;
 using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Drawing.Design;
+using System.Linq;
 
 namespace StuffDatabase
 {
@@ -14,8 +15,6 @@ namespace StuffDatabase
         public Type Type { get => GetPar<Type>(); set => SetPar(value); }
 
 
-
-
         public override string ToString()
         {
             return Name;
@@ -25,3 +24,4 @@ namespace StuffDatabase
 
 
 }
+

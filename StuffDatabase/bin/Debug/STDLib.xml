@@ -112,11 +112,7 @@
             </code>
             </summary>
         </member>
-        <member name="E:STDLib.Misc.PropertySensitive.PropertyChanged">
-            <summary>
-            <see cref="E:System.ComponentModel.INotifyPropertyChanged.PropertyChanged"/>
-            </summary>
-        </member>
+        <!-- Badly formed XML comment ignored for member "E:STDLib.Misc.PropertySensitive.PropertyChanged" -->
         <member name="M:STDLib.Misc.PropertySensitive.SetPar``1(``0,System.String)">
             <summary>
             Use this in the setter of a property to set the value

@@ -1,6 +1,7 @@
 ﻿using STDLib.Misc;
 using System;
 using System.ComponentModel;
+using System.Linq;
 
 namespace StuffDatabase
 {
@@ -8,17 +9,23 @@ namespace StuffDatabase
     {
         [Category("Design")]
         public string Name { get => GetPar(""); set => SetPar(value); }
-        [Browsable(false)]
-        public PartType Type { get => GetPar<PartType>(); set => SetPar(value); }
+        //[Browsable(false)]
+        //public PartType Type { get => GetPar<PartType>(); set => SetPar(value); }
+
+
+        public PartItem()
+        {
+
+        }
 
 
         public PartItem(string name, PartType type)
         {
             Name = name;
-            Type = type;
+            //Type = type;
 
             foreach (PartParameter par in type.Parameters)
-                SetPar(Activator.CreateInstance(par.Type), par.Name);
+                SetPar(TypeStringConverter.Types.FirstOrDefault(a => a.Type == par.Type).Create(), par.Name);
         }
 
 

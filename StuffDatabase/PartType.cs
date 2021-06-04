@@ -8,7 +8,7 @@ namespace StuffDatabase
         public string Name { get => GetPar(""); set => SetPar(value); }
 
         
-        public BindingList<PartParameter> Parameters { get; } = new BindingList<PartParameter>();
+        public BindingList<PartParameter> Parameters { get; set; } = new BindingList<PartParameter>();
 
         public override string ToString()
         {

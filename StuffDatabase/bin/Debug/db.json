@@ -2,32 +2,35 @@
   "Filename": "db.json",
   "Types": [
     {
-      "Name": "newType",
+      "Name": "FET",
       "Parameters": [
         {
-          "Name": "HFE",
-          "Type": "System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
-          "NotifyOnChange": true
+          "Name": "VDS",
+          "Type": "System.Double, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+        },
+        {
+          "Name": "Description",
+          "Type": "System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
         }
-      ],
-      "NotifyOnChange": true
+      ]
     }
   ],
   "Items": [
     {
-      "Name": "some item",
-      "Type": {
-        "Name": "newType",
-        "Parameters": [
-          {
-            "Name": "HFE",
-            "Type": "System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
-            "NotifyOnChange": true
-          }
-        ],
-        "NotifyOnChange": true
-      },
-      "NotifyOnChange": true
+      "Name": "sometor",
+      "HFE": 0
+    },
+    {
+      "Name": "sometor",
+      "HFE": 10
+    },
+    {
+      "Name": "sometor",
+      "HFE": 0
+    },
+    {
+      "Name": "newItem",
+      "HFE": 0
     }
   ]
 }
