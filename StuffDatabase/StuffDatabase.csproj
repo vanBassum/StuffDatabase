@@ -57,6 +57,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="TypeSelectionEditor.cs" />
     <Compile Include="PartItem.cs" />
     <Compile Include="PartParameter.cs" />
     <Compile Include="PartType.cs" />

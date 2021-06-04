@@ -7,12 +7,16 @@ using System.IO;
 namespace StuffDatabase
 {
     public class DB : Saveable
-    { 
+    {
+
         public BindingList<PartType> Types { get; } = new BindingList<PartType>();
         public BindingList<PartItem> Items { get; } = new BindingList<PartItem>();
 
-
-        
+        public DB()
+        {
+            //Types.ListChanged += Types_ListChanged;
+            //Items.ListChanged += Items_ListChanged;
+        }
 
     }
 }
