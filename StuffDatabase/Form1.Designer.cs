@@ -30,20 +30,29 @@ namespace StuffDatabase
         private void InitializeComponent()
         {
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
             // propertyGrid1
             // 
-            this.propertyGrid1.Location = new System.Drawing.Point(139, 12);
+            this.propertyGrid1.Location = new System.Drawing.Point(268, 51);
             this.propertyGrid1.Name = "propertyGrid1";
             this.propertyGrid1.Size = new System.Drawing.Size(254, 302);
             this.propertyGrid1.TabIndex = 1;
             // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(800, 24);
+            this.menuStrip1.TabIndex = 3;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
             // listBox1
             // 
             this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(12, 12);
+            this.listBox1.Location = new System.Drawing.Point(12, 63);
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(121, 290);
             this.listBox1.TabIndex = 2;
@@ -55,15 +64,19 @@ namespace StuffDatabase
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.propertyGrid1);
+            this.Controls.Add(this.menuStrip1);
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
         private System.Windows.Forms.PropertyGrid propertyGrid1;
+        private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ListBox listBox1;
     }
 }

@@ -57,12 +57,13 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="TypeSelectionEditor.cs" />
+    <Compile Include="LookupTable.cs" />
     <Compile Include="PartItem.cs" />
     <Compile Include="PartParameter.cs" />
     <Compile Include="PartType.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TypeStringConverter.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
