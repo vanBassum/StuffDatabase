@@ -9,9 +9,6 @@ namespace StuffDatabase
     {
         [Category("Design")]
         public string Name { get => GetPar(""); set => SetPar(value); }
-        //[Browsable(false)]
-        //public PartType Type { get => GetPar<PartType>(); set => SetPar(value); }
-
 
         public PartItem()
         {
@@ -22,7 +19,6 @@ namespace StuffDatabase
         public PartItem(string name, PartType type)
         {
             Name = name;
-            //Type = type;
 
             foreach (PartParameter par in type.Parameters)
                 SetPar(TypeStringConverter.Types.FirstOrDefault(a => a.Type == par.Type).Create(), par.Name);
